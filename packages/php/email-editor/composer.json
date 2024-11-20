@@ -1,0 +1,44 @@
+{
+  "name": "mailpoet/email-editor",
+  "description": "Email editor based on WordPress Gutenberg package.",
+  "type": "library",
+  "autoload": {
+    "classmap": [
+      "src/",
+			"../../../core/"
+    ]
+  },
+  "autoload-dev": {
+    "classmap": [
+      "tests/unit/"
+    ]
+  },
+	"repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/mailpoet/html2text"
+    }
+  ],
+  "require": {
+    "php": ">=7.4",
+		"pelago/emogrifier": "7.2.0",
+		"soundasleep/html2text": "dev-master"
+  },
+  "require-dev": {
+    "codeception/codeception": "^4.2",
+    "codeception/module-asserts": "^2.0",
+    "phpunit/phpunit": "^9.6"
+  },
+  "config": {
+    "platform": {
+      "php": "7.4.0"
+    },
+    "sort-packages": true
+  },
+  "scripts": {
+    "unit-test": "vendor/bin/codecept run unit",
+    "integration-test": "cd ../../../tests_env/docker && COMPOSE_HTTP_TIMEOUT=200 docker compose run -e SKIP_DEPS=1 -e SKIP_PLUGINS=1 -e PACKAGE_NAME=email-editor codeception_integration",
+    "code-style": "../../../mailpoet/tasks/code_sniffer/vendor/bin/phpcs -ps",
+		"code-style-fix": "../../../mailpoet/tasks/code_sniffer/vendor/bin/phpcbf -p"
+  }
+}

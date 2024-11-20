@@ -1,0 +1,16 @@
+{
+	"name": "mailpoet-email-editor-demo",
+	"version": "0.1.0",
+	"description": "An example Demo of how to use the MailPoet Email Editor.",
+	"author": "MailPoet",
+	"license": "GPL-2.0-or-later",
+	"main": "build/index.js",
+	"scripts": {
+		"preinstall": "cd packages/js/email-editor && npm install --frozen-lockfile --prefer-offline && cd ../../php/email-editor && composer install",
+		"postinstall": "npm run build",
+		"build": "cd packages/js/email-editor && npm run build && cp -Rf build ../../.."
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^30.5.1"
+	}
+}
