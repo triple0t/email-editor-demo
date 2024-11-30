@@ -9,10 +9,14 @@ class EmailEditorDemoIntegration
 
   private EmailEditorPageRenderer $editorPageRenderer;
 
+  private EmailEditorDemoApiController $emailApiController;
+
   public function __construct(
-    EmailEditorPageRenderer $editorPageRenderer
+    EmailEditorPageRenderer $editorPageRenderer,
+    EmailEditorDemoApiController $emailApiController,
   ) {
     $this->editorPageRenderer = $editorPageRenderer;
+    $this->emailApiController = $emailApiController;
   }
 
   public function initialize(): void
@@ -20,6 +24,7 @@ class EmailEditorDemoIntegration
     add_filter('mailpoet_email_editor_post_types', [$this, 'addEmailPostType']);
     add_filter('mailpoet_is_email_editor_page', [$this, 'isEditorPage'], 10, 1);
     add_filter('replace_editor', [$this, 'replaceEditor'], 10, 2);
+    $this->extendEmailPostApi();
   }
 
   public function addEmailPostType(array $postTypes): array
@@ -73,5 +78,13 @@ class EmailEditorDemoIntegration
       return true;
     }
     return $replace;
+  }
+
+  public function extendEmailPostApi() {
+    register_rest_field(self::MAILPOET_EMAIL_POST_TYPE, 'mailpoet_data', [
+      'get_callback' => [$this->emailApiController, 'getEmailData'],
+      'update_callback' => [$this->emailApiController, 'saveEmailData'],
+      'schema' => $this->emailApiController->getEmailDataSchema(),
+    ]);
   }
 }

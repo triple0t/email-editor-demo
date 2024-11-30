@@ -234,6 +234,13 @@ class Base
     // End: Email editor dependencies.
 
     $container->set(
+      EmailEditorDemoApiController::class,
+      function () {
+        return new EmailEditorDemoApiController();
+      }
+    );
+
+    $container->set(
       EmailEditorPageRenderer::class,
       function ($container) {
         return new EmailEditorPageRenderer(
@@ -248,7 +255,8 @@ class Base
       EmailEditorDemoIntegration::class,
       function ($container) {
         return new EmailEditorDemoIntegration(
-          $container->get(EmailEditorPageRenderer::class)
+          $container->get(EmailEditorPageRenderer::class),
+          $container->get(EmailEditorDemoApiController::class)
         );
       }
     );
