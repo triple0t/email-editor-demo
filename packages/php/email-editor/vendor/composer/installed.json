@@ -1,14 +1,9 @@
 {
-    "_readme": [
-        "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
-        "This file is @generated automatically"
-    ],
-    "content-hash": "3ec3d68813951a5994b8185678e256db",
     "packages": [
         {
             "name": "pelago/emogrifier",
             "version": "v7.2.0",
+            "version_normalized": "7.2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MyIntervals/emogrifier.git",
@@ -32,12 +27,14 @@
                 "phpunit/phpunit": "9.6.11",
                 "rawr/cross-data-providers": "2.4.0"
             },
+            "time": "2023-12-06T02:00:20+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-main": "8.0.x-dev"
                 }
             },
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Pelago\\Emogrifier\\": "src/"
@@ -82,11 +79,12 @@
                 "issues": "https://github.com/MyIntervals/emogrifier/issues",
                 "source": "https://github.com/MyIntervals/emogrifier"
             },
-            "time": "2023-12-06T02:00:20+00:00"
+            "install-path": "../pelago/emogrifier"
         },
         {
             "name": "sabberworm/php-css-parser",
             "version": "v8.7.0",
+            "version_normalized": "8.7.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MyIntervals/PHP-CSS-Parser.git",
@@ -108,12 +106,14 @@
             "suggest": {
                 "ext-mbstring": "for parsing UTF-8 CSS"
             },
+            "time": "2024-10-27T17:38:32+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-main": "9.0.x-dev"
                 }
             },
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Sabberworm\\CSS\\": "src/"
@@ -147,11 +147,12 @@
                 "issues": "https://github.com/MyIntervals/PHP-CSS-Parser/issues",
                 "source": "https://github.com/MyIntervals/PHP-CSS-Parser/tree/v8.7.0"
             },
-            "time": "2024-10-27T17:38:32+00:00"
+            "install-path": "../sabberworm/php-css-parser"
         },
         {
             "name": "soundasleep/html2text",
             "version": "dev-master",
+            "version_normalized": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mailpoet/html2text.git",
@@ -172,8 +173,10 @@
                 "phpunit/phpunit": ">=4.0",
                 "soundasleep/component-tests": "dev-master"
             },
+            "time": "2019-04-24T12:03:33+00:00",
             "default-branch": true,
             "type": "library",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Html2Text\\": "src"
@@ -201,11 +204,12 @@
                 "email": "support@jevon.org",
                 "source": "https://github.com/mailpoet/html2text/tree/master"
             },
-            "time": "2019-04-24T12:03:33+00:00"
+            "install-path": "../soundasleep/html2text"
         },
         {
             "name": "symfony/css-selector",
             "version": "v5.4.45",
+            "version_normalized": "5.4.45.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
@@ -221,7 +225,9 @@
                 "php": ">=7.2.5",
                 "symfony/polyfill-php80": "^1.16"
             },
+            "time": "2024-09-25T14:11:13+00:00",
             "type": "library",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Symfony\\Component\\CssSelector\\": ""
@@ -267,11 +273,12 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-25T14:11:13+00:00"
+            "install-path": "../symfony/css-selector"
         },
         {
             "name": "symfony/polyfill-php80",
             "version": "v1.31.0",
+            "version_normalized": "1.31.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
@@ -286,6 +293,7 @@
             "require": {
                 "php": ">=7.2"
             },
+            "time": "2024-09-09T11:45:10+00:00",
             "type": "library",
             "extra": {
                 "thanks": {
@@ -293,6 +301,7 @@
                     "url": "https://github.com/symfony/polyfill"
                 }
             },
+            "installation-source": "dist",
             "autoload": {
                 "files": [
                     "bootstrap.php"
@@ -347,23 +356,9 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-09T11:45:10+00:00"
+            "install-path": "../symfony/polyfill-php80"
         }
     ],
-    "packages-dev": [],
-    "aliases": [],
-    "minimum-stability": "stable",
-    "stability-flags": {
-        "soundasleep/html2text": 20
-    },
-    "prefer-stable": false,
-    "prefer-lowest": false,
-    "platform": {
-        "php": ">=7.4"
-    },
-    "platform-dev": [],
-    "platform-overrides": {
-        "php": "7.4.0"
-    },
-    "plugin-api-version": "2.6.0"
+    "dev": true,
+    "dev-package-names": []
 }

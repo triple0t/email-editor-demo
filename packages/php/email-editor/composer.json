@@ -24,11 +24,6 @@
 		"pelago/emogrifier": "7.2.0",
 		"soundasleep/html2text": "dev-master"
   },
-  "require-dev": {
-    "codeception/codeception": "^4.2",
-    "codeception/module-asserts": "^2.0",
-    "phpunit/phpunit": "^9.6"
-  },
   "config": {
     "platform": {
       "php": "7.4.0"
