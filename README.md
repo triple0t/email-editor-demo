@@ -8,6 +8,8 @@ The main editor package library is split into two packages
 * `PHP` -> [/packages/php/email-editor](/packages/php/email-editor)
 
 
+Try it out at: [WordPress Playground](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/triple0t/email-editor-demo/refs/heads/main/blueprint.json)
+
 Integration file is located at `/core`
 
 ### How to use

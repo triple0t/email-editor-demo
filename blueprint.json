@@ -1,0 +1,20 @@
+{
+	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"landingPage": "/wp-admin/edit.php?post_type=mailpoet_email",
+	"steps": [
+	  {
+		"step": "login",
+		"username": "admin"
+	  },
+	  {
+		"step": "installPlugin",
+		"pluginData": {
+		  "resource": "url",
+		  "url": "https://github-proxy.com/proxy/?repo=triple0t/email-editor-demo&branch=main"
+		},
+		"options": {
+		  "activate": true
+		}
+	  }
+	]
+  }
