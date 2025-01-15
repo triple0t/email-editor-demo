@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the MailPoet plugin.
+ * This file is part of the MailPoet Email Editor package.
  *
  * @package MailPoet\EmailEditor
  */
@@ -10,7 +10,7 @@ namespace MailPoet\EmailEditor\Engine\Renderer\ContentRenderer;
 
 use MailPoet\EmailEditor\Engine\Settings_Controller;
 use MailPoet\EmailEditor\Engine\Theme_Controller;
-use Pelago\Emogrifier\CssInliner;
+use MailPoetVendor\Pelago\Emogrifier\CssInliner;
 use WP_Block_Template;
 use WP_Post;
 
@@ -46,20 +46,6 @@ class Content_Renderer {
 	 */
 	private Theme_Controller $theme_controller;
 
-	/**
-	 * Post object
-	 *
-	 * @var WP_Post
-	 */
-	private $post = null;
-
-	/**
-	 * Block template
-	 *
-	 * @var WP_Block_Template
-	 */
-	private $template = null;
-
 	const CONTENT_STYLES_FILE = 'content.css';
 
 	/**
@@ -84,6 +70,8 @@ class Content_Renderer {
 
 	/**
 	 * Initialize the content renderer
+	 *
+	 * @return void
 	 */
 	private function initialize() {
 		add_filter( 'render_block', array( $this, 'render_block' ), 10, 2 );
@@ -101,8 +89,6 @@ class Content_Renderer {
 	 * @return string
 	 */
 	public function render( WP_Post $post, WP_Block_Template $template ): string {
-		$this->post     = $post;
-		$this->template = $template;
 		$this->set_template_globals( $post, $template );
 		$this->initialize();
 		$rendered_html = get_the_block_template_html();
@@ -127,7 +113,7 @@ class Content_Renderer {
 	 * @return array
 	 */
 	public function preprocess_parsed_blocks( array $parsed_blocks ): array {
-		return $this->process_manager->preprocess( $parsed_blocks, $this->theme_controller->get_layout_settings(), $this->theme_controller->get_styles( $this->post, $this->template ) );
+		return $this->process_manager->preprocess( $parsed_blocks, $this->theme_controller->get_layout_settings(), $this->theme_controller->get_styles() );
 	}
 
 	/**
@@ -151,6 +137,7 @@ class Content_Renderer {
 	 *
 	 * @param WP_Post           $post Post object.
 	 * @param WP_Block_Template $template Block template.
+	 * @return void
 	 */
 	private function set_template_globals( WP_Post $post, WP_Block_Template $template ) {
 		global $_wp_current_template_content, $_wp_current_template_id;
@@ -236,6 +223,6 @@ class Content_Renderer {
 
 		$styles = '<style>' . wp_strip_all_tags( (string) apply_filters( 'mailpoet_email_content_renderer_styles', $styles, $post ) ) . '</style>';
 
-		return CssInliner::fromHtml( $styles . $html )->inlineCss()->render();
+		return CssInliner::fromHtml( $styles . $html )->inlineCss()->render();  // TODO: Install CssInliner.
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the MailPoet plugin.
+ * This file is part of the MailPoet plugin
  *
  * @package MailPoet\EmailEditor
  */
@@ -9,9 +9,11 @@ declare(strict_types = 1);
 
 use Codeception\Stub;
 use MailPoet\EmailEditor\Container;
+use MailPoet\EmailEditor\Engine\Dependency_Check;
 use MailPoet\EmailEditor\Engine\Email_Api_Controller;
 use MailPoet\EmailEditor\Engine\Email_Editor;
 use MailPoet\EmailEditor\Engine\Patterns\Patterns;
+use MailPoet\EmailEditor\Engine\PersonalizationTags\Personalization_Tags_Registry;
 use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Blocks_Registry;
 use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Content_Renderer;
 use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Postprocessors\Highlighting_Postprocessor;
@@ -23,14 +25,12 @@ use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Preprocessors\Typograph
 use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Process_Manager;
 use MailPoet\EmailEditor\Engine\Renderer\Renderer;
 use MailPoet\EmailEditor\Engine\Settings_Controller;
-use MailPoet\EmailEditor\Engine\Templates\Template_Preview;
 use MailPoet\EmailEditor\Engine\Templates\Templates;
-use MailPoet\EmailEditor\Engine\Templates\Utils;
 use MailPoet\EmailEditor\Engine\Theme_Controller;
+use MailPoet\EmailEditor\Engine\User_Theme;
 use MailPoet\EmailEditor\Integrations\Core\Initializer;
 use MailPoet\EmailEditor\Integrations\MailPoet\Blocks\BlockTypesController;
 use MailPoet\EmailEditor\Engine\Send_Preview_Email;
-use MailPoet\EmailEditor\Utils\Cdn_Asset_Url;
 
 if ( (bool) getenv( 'MULTISITE' ) === true ) {
 	// REQUEST_URI needs to be set for WP to load the proper subsite where MailPoet is activated.
@@ -61,6 +61,13 @@ abstract class MailPoetTest extends \Codeception\TestCase\Test { // phpcs:ignore
 	 * @var Container
 	 */
 	public Container $di_container;
+
+	/**
+	 * The tester.
+	 *
+	 * @var IntegrationTester
+	 */
+	public $tester;
 
 	// phpcs:disable WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase
 	/**
@@ -98,6 +105,14 @@ abstract class MailPoetTest extends \Codeception\TestCase\Test { // phpcs:ignore
 	}
 
 	/**
+	 * Tear down after each test.
+	 */
+	public function _after() {
+		parent::_after();
+		$this->tester->cleanup();
+	}
+
+	/**
 	 * Check if the HTML is valid.
 	 *
 	 * @param string $html The HTML to check.
@@ -117,10 +132,11 @@ abstract class MailPoetTest extends \Codeception\TestCase\Test { // phpcs:ignore
 	/**
 	 * Get a service from the DI container.
 	 *
-	 * @param string $id The service ID.
-	 * @param array  $overrides The properties to override.
+	 * @template T
+	 * @param class-string<T> $id The service ID.
+	 * @param array           $overrides The properties to override.
 	 */
-	public function getServiceWithOverrides( string $id, array $overrides ) {
+	public function getServiceWithOverrides( $id, array $overrides ) {
 		$instance = $this->di_container->get( $id );
 		return Stub::copy( $instance, $overrides );
 	}
@@ -138,18 +154,6 @@ abstract class MailPoetTest extends \Codeception\TestCase\Test { // phpcs:ignore
 			}
 		);
 		$container->set(
-			Cdn_Asset_Url::class,
-			function () {
-				return new Cdn_Asset_Url( 'http://localhost' );
-			}
-		);
-		$container->set(
-			Email_Api_Controller::class,
-			function () {
-				return new Email_Api_Controller();
-			}
-		);
-		$container->set(
 			BlockTypesController::class,
 			function () {
 				return $this->createMock( BlockTypesController::class );
@@ -157,15 +161,15 @@ abstract class MailPoetTest extends \Codeception\TestCase\Test { // phpcs:ignore
 		);
 		// End: MailPoet plugin dependencies.
 		$container->set(
-			Utils::class,
-			function () {
-				return new Utils();
-			}
-		);
-		$container->set(
 			Theme_Controller::class,
 			function () {
 				return new Theme_Controller();
+			}
+		);
+		$container->set(
+			User_Theme::class,
+			function () {
+				return new User_Theme();
 			}
 		);
 		$container->set(
@@ -182,26 +186,14 @@ abstract class MailPoetTest extends \Codeception\TestCase\Test { // phpcs:ignore
 		);
 		$container->set(
 			Templates::class,
-			function ( $container ) {
-				return new Templates( $container->get( Utils::class ) );
-			}
-		);
-		$container->set(
-			Template_Preview::class,
-			function ( $container ) {
-				return new Template_Preview(
-					$container->get( Theme_Controller::class ),
-					$container->get( Settings_Controller::class ),
-					$container->get( Templates::class ),
-				);
+			function () {
+				return new Templates();
 			}
 		);
 		$container->set(
 			Patterns::class,
-			function ( $container ) {
-				return new Patterns(
-					$container->get( Cdn_Asset_Url::class ),
-				);
+			function () {
+				return new Patterns();
 			}
 		);
 		$container->set(
@@ -289,15 +281,35 @@ abstract class MailPoetTest extends \Codeception\TestCase\Test { // phpcs:ignore
 			}
 		);
 		$container->set(
+			Personalization_Tags_Registry::class,
+			function () {
+				return new Personalization_Tags_Registry();
+			}
+		);
+		$container->set(
+			Email_Api_Controller::class,
+			function ( $container ) {
+				return new Email_Api_Controller(
+					$container->get( Personalization_Tags_Registry::class ),
+				);
+			}
+		);
+		$container->set(
+			Dependency_Check::class,
+			function () {
+				return new Dependency_Check();
+			}
+		);
+		$container->set(
 			Email_Editor::class,
 			function ( $container ) {
 				return new Email_Editor(
 					$container->get( Email_Api_Controller::class ),
 					$container->get( Templates::class ),
-					$container->get( Template_Preview::class ),
 					$container->get( Patterns::class ),
 					$container->get( Settings_Controller::class ),
 					$container->get( Send_Preview_Email::class ),
+					$container->get( Personalization_Tags_Registry::class ),
 				);
 			}
 		);

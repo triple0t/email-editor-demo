@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the MailPoet plugin.
+ * This file is part of the MailPoet Email Editor package.
  *
  * @package MailPoet\EmailEditor
  */
@@ -11,8 +11,8 @@ namespace MailPoet\EmailEditor\Engine\Renderer;
 use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Content_Renderer;
 use MailPoet\EmailEditor\Engine\Templates\Templates;
 use MailPoet\EmailEditor\Engine\Theme_Controller;
-use Html2Text\Html2Text;
-use Pelago\Emogrifier\CssInliner;
+use MailPoetVendor\Html2Text\Html2Text;
+use MailPoetVendor\Pelago\Emogrifier\CssInliner;
 use WP_Style_Engine;
 use WP_Theme_JSON;
 
@@ -41,13 +41,6 @@ class Renderer {
 	 */
 	private Templates $templates;
 
-	/**
-	 * Theme data for the template being rendered.
-	 *
-	 * @var WP_Theme_JSON|null
-	 */
-	private static $theme = null;
-
 	const TEMPLATE_FILE        = 'template-canvas.php';
 	const TEMPLATE_STYLES_FILE = 'template-canvas.css';
 
@@ -69,13 +62,6 @@ class Renderer {
 	}
 
 	/**
-	 * During rendering, this stores the theme data for the template being rendered.
-	 */
-	public static function get_theme() {
-		return self::$theme;
-	}
-
-	/**
 	 * Renders the email template
 	 *
 	 * @param \WP_Post $post Post object.
@@ -86,14 +72,11 @@ class Renderer {
 	 * @return array
 	 */
 	public function render( \WP_Post $post, string $subject, string $pre_header, string $language, $meta_robots = '' ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
-		$template_id = 'mailpoet/mailpoet//' . ( get_page_template_slug( $post ) ? get_page_template_slug( $post ) : 'email-general' );
-		$template    = $this->templates->get_block_template( $template_id );
-		$theme       = $this->templates->get_block_template_theme( $template_id, $template->wp_id );
+		$template_slug = get_page_template_slug( $post ) ? get_page_template_slug( $post ) : 'email-general';
+		/** @var \WP_Block_Template $template */ // phpcs:ignore Generic.Commenting.DocComment.MissingShort -- used for phpstan
+		$template = $this->templates->get_block_template( $template_slug );
 
-		// Set the theme for the template. This is merged with base theme.json and core json before rendering.
-		self::$theme = new WP_Theme_JSON( $theme, 'default' );
-
-		$email_styles  = $this->theme_controller->get_styles( $post, $template );
+		$email_styles  = $this->theme_controller->get_styles();
 		$template_html = $this->content_renderer->render( $post, $template );
 		$layout        = $this->theme_controller->get_layout_settings();
 
@@ -140,7 +123,7 @@ class Renderer {
 	 * @return string
 	 */
 	private function inline_css_styles( $template ) {
-		return CssInliner::fromHtml( $template )->inlineCss()->render();
+		return CssInliner::fromHtml( $template )->inlineCss()->render();  // TODO: Install CssInliner.
 	}
 
 	/**
@@ -151,7 +134,7 @@ class Renderer {
 	 */
 	private function render_text_version( $template ) {
 		$template = ( mb_detect_encoding( $template, 'UTF-8', true ) ) ? $template : mb_convert_encoding( $template, 'UTF-8', mb_list_encodings() );
-		$result   = Html2Text::convert( $template );
+		$result   = Html2Text::convert( $template );  // TODO: Install Html2Text.
 		if ( false === $result ) {
 			return '';
 		}
