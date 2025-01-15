@@ -57,14 +57,11 @@ class EmailEditorDemoIntegration
     if ($isEditorPage) {
       return $isEditorPage;
     }
+
     // We need to check early if we are on the email editor page. The check runs early so we can't use current_screen() here.
     if (is_admin() && isset($_GET['post']) && isset($_GET['action']) && $_GET['action'] === 'edit') {
       $post = get_post((int)$_GET['post']);
       return $post && $post->post_type === self::MAILPOET_EMAIL_POST_TYPE; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
-    }
-
-    if (is_admin() && isset($_GET['post_type']) && $_GET['post_type'] === self::MAILPOET_EMAIL_POST_TYPE) {
-      return true;
     }
 
     return false;
