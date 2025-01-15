@@ -4,7 +4,6 @@ namespace EmailEditorDemo;
 
 use MailPoet\EmailEditor\Engine\Settings_Controller;
 use MailPoet\EmailEditor\Engine\Theme_Controller;
-use MailPoet\EmailEditor\Utils\Cdn_Asset_Url;
 
 class EmailEditorPageRenderer
 {
