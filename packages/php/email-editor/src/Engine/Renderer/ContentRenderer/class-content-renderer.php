@@ -10,7 +10,7 @@ namespace MailPoet\EmailEditor\Engine\Renderer\ContentRenderer;
 
 use MailPoet\EmailEditor\Engine\Settings_Controller;
 use MailPoet\EmailEditor\Engine\Theme_Controller;
-use MailPoetVendor\Pelago\Emogrifier\CssInliner;
+use Pelago\Emogrifier\CssInliner;
 use WP_Block_Template;
 use WP_Post;
 

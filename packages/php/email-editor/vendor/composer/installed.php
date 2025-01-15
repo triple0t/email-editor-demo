@@ -3,7 +3,7 @@
         'name' => 'mailpoet/email-editor',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '2d87164096e277c10bdebf5e554743564130ad2b',
+        'reference' => 'e21d5037abe52d180e5caf65d340e155e43fc4ed',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'mailpoet/email-editor' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '2d87164096e277c10bdebf5e554743564130ad2b',
+            'reference' => 'e21d5037abe52d180e5caf65d340e155e43fc4ed',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
