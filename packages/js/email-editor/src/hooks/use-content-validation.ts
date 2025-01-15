@@ -9,7 +9,7 @@ import { useShallowEqual } from './use-shallow-equal';
 import { useValidationNotices } from './use-validation-notices';
 
 export type ContentValidationData = {
-	isValid: boolean;
+	isInvalid: boolean;
 	validateContent: () => boolean;
 };
 
@@ -33,33 +33,32 @@ export const useContentValidation = (): ContentValidationData => {
 
 	const { addValidationNotice, hasValidationNotice, removeValidationNotice } =
 		useValidationNotices();
-	const { editedContent, editedTemplateContent, defaultTemplateId } =
-		useSelect( ( mapSelect ) => ( {
+	const { editedContent, editedTemplateContent, postTemplateId } = useSelect(
+		( mapSelect ) => ( {
 			editedContent:
 				mapSelect( emailEditorStore ).getEditedEmailContent(),
 			editedTemplateContent:
-				mapSelect( emailEditorStore ).getTemplateContent(),
-			defaultTemplateId: mapSelect( coreDataStore ).getDefaultTemplateId(
-				{
-					slug: 'email-general',
-				}
-			),
-		} ) );
+				mapSelect( emailEditorStore ).getCurrentTemplateContent(),
+			postTemplateId:
+				mapSelect( emailEditorStore ).getCurrentTemplate()?.id,
+		} )
+	);
 
 	const content = useShallowEqual( editedContent );
 	const templateContent = useShallowEqual( editedTemplateContent );
 
-	const contentLink = `<a href='[link:subscription_unsubscribe_url]'>${ __(
+	const contentLink = `<a data-link-href='[mailpoet/subscription-unsubscribe-url]' contenteditable='false' style='text-decoration: underline;' class='mailpoet-email-editor__personalization-tags-link'>${ __(
 		'Unsubscribe',
 		'mailpoet'
-	) }</a> | <a href='[link:subscription_manage_url]'>${ __(
+	) }</a> | <a data-link-href='[mailpoet/subscription-manage-url]' contenteditable='false' style='text-decoration: underline;' class='mailpoet-email-editor__personalization-tags-link'>${ __(
 		'Manage subscription',
 		'mailpoet'
 	) }</a>`;
 
 	const rules = useMemo( () => {
 		const linksParagraphBlock = createBlock( 'core/paragraph', {
-			className: 'has-small-font-size',
+			align: 'center',
+			fontSize: 'small',
 			content: contentLink,
 		} );
 
@@ -68,7 +67,7 @@ export const useContentValidation = (): ContentValidationData => {
 				id: 'missing-unsubscribe-link',
 				test: ( emailContent ) =>
 					! emailContent.includes(
-						'[link:subscription_unsubscribe_url]'
+						'[mailpoet/subscription-unsubscribe-url]'
 					),
 				message: __(
 					'All emails must include an "Unsubscribe" link.',
@@ -88,11 +87,11 @@ export const useContentValidation = (): ContentValidationData => {
 								void dispatch( coreDataStore ).editEntityRecord(
 									'postType',
 									'wp_template',
-									defaultTemplateId,
+									postTemplateId,
 									{
 										content: `
                       ${ editedTemplateContent }
-                      <!-- wp:paragraph -->
+                      <!-- wp:paragraph {"align":"center","fontSize":"small"} -->
                       ${ contentLink }
                       <!-- /wp:paragraph -->
                     `,
@@ -108,7 +107,7 @@ export const useContentValidation = (): ContentValidationData => {
 		contentBlockId,
 		hasFooter,
 		contentLink,
-		defaultTemplateId,
+		postTemplateId,
 		editedTemplateContent,
 	] );
 
@@ -142,7 +141,7 @@ export const useContentValidation = (): ContentValidationData => {
 	}, emailEditorStore );
 
 	return {
-		isValid: hasValidationNotice(),
+		isInvalid: hasValidationNotice(),
 		validateContent,
 	};
 };

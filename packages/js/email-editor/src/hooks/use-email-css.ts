@@ -1,18 +1,23 @@
+/**
+ * WordPress dependencies
+ */
 import { useMemo } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import deepmerge from 'deepmerge';
-import {
-	// @ts-expect-error No types for this exist yet.
-	privateApis as blockEditorPrivateApi,
-} from '@wordpress/block-editor';
-import { unlock } from '../lock-unlock';
-import { EmailStyles, storeName } from '../store';
-import { useEmailTheme } from './use-email-theme';
 
-const { useGlobalStylesOutputWithConfig } = unlock( blockEditorPrivateApi );
+/**
+ * WordPress private dependencies
+ */
+import { useGlobalStylesOutputWithConfig } from '../private-apis';
+
+/**
+ * Internal dependencies
+ */
+import deepmerge from 'deepmerge';
+import { EmailStyles, storeName } from '../store';
+import { useUserTheme } from './use-user-theme';
 
 export function useEmailCss() {
-	const { templateTheme } = useEmailTheme();
+	const { userTheme } = useUserTheme();
 	const { editorTheme } = useSelect(
 		( select ) => ( {
 			editorTheme: select( storeName ).getTheme(),
@@ -25,13 +30,13 @@ export function useEmailCss() {
 			deepmerge.all( [
 				{},
 				editorTheme || {},
-				templateTheme || {},
+				userTheme || {},
 			] ) as EmailStyles,
-		[ editorTheme, templateTheme ]
+		[ editorTheme, userTheme ]
 	);
 
 	const [ styles ] = useGlobalStylesOutputWithConfig( mergedConfig );
 
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-	return [ styles ];
+	return [ styles || [] ];
 }

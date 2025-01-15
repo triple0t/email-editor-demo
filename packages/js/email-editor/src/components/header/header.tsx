@@ -1,3 +1,6 @@
+/**
+ * WordPress dependencies
+ */
 import { useRef, useState } from '@wordpress/element';
 import { PinnedItems } from '@wordpress/interface';
 import { Button, ToolbarItem as WpToolbarItem } from '@wordpress/components';
@@ -8,20 +11,30 @@ import {
 } from '@wordpress/block-editor';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { store as coreDataStore } from '@wordpress/core-data';
-// @ts-expect-error DocumentBar types are not available
-import { DocumentBar, store as editorStore } from '@wordpress/editor';
+import {
+	// @ts-expect-error DocumentBar types are not available
+	DocumentBar,
+	store as editorStore,
+	// @ts-expect-error useEntitiesSavedStatesIsDirty types are not available
+	useEntitiesSavedStatesIsDirty,
+} from '@wordpress/editor';
 import { store as preferencesStore } from '@wordpress/preferences';
 import { __ } from '@wordpress/i18n';
 import { plus, listView, undo, redo, next, previous } from '@wordpress/icons';
+
+/**
+ * Internal dependencies
+ */
 import classnames from 'classnames';
 import { storeName } from '../../store';
 import { MoreMenu } from './more-menu';
 import { PreviewDropdown } from '../preview';
-import { SaveButton } from './save-button';
+import { SaveEmailButton } from './save-email-button';
 import { CampaignName } from './campaign-name';
 import { SendButton } from './send-button';
-
-import { unlock } from '../../lock-unlock';
+import { SaveAllButton } from './save-all-button';
+import { useContentValidation, useEditorMode } from '../../hooks';
+import { recordEvent } from '../../events';
 
 // Build type for ToolbarItem contains only "as" and "children" properties but it takes all props from
 // component passed to "as" property (in this case Button). So as fix for TS errors we need to pass all props from Button to ToolbarItem.
@@ -59,14 +72,7 @@ export function Header() {
 		isBlockSelected,
 		hasUndo,
 		hasRedo,
-		hasDocumentNavigationHistory,
 	} = useSelect( ( select ) => {
-		// eslint-disable-next-line @typescript-eslint/naming-convention
-		const { getEditorSettings: _getEditorSettings } = unlock(
-			select( editorStore )
-		);
-		const editorSettings = _getEditorSettings();
-
 		return {
 			// @ts-expect-error missing types.
 			isInserterSidebarOpened: select( editorStore ).isInserterOpened(),
@@ -80,10 +86,16 @@ export function Header() {
 				!! select( blockEditorStore ).getBlockSelectionStart(),
 			hasUndo: select( coreDataStore ).hasUndo(),
 			hasRedo: select( coreDataStore ).hasRedo(),
-			hasDocumentNavigationHistory:
-				!! editorSettings.onNavigateToPreviousEntityRecord,
 		};
 	}, [] );
+
+	const [ editorMode ] = useEditorMode();
+	const { validateContent, isInvalid } = useContentValidation();
+
+	const { dirtyEntityRecords } = useEntitiesSavedStatesIsDirty();
+	const hasNonEmailEdits = dirtyEntityRecords.some(
+		( entity ) => entity.name !== 'mailpoet_email'
+	);
 
 	const preventDefault = ( event ) => {
 		event.preventDefault();
@@ -91,15 +103,19 @@ export function Header() {
 
 	const toggleTheInserterSidebar = () => {
 		if ( isInserterSidebarOpened ) {
+			recordEvent( 'header_inserter_sidebar_closed' );
 			return setIsInserterOpened( false );
 		}
+		recordEvent( 'header_inserter_sidebar_opened' );
 		return setIsInserterOpened( true );
 	};
 
 	const toggleTheListviewSidebar = () => {
 		if ( isListviewSidebarOpened ) {
+			recordEvent( 'header_listview_sidebar_closed' );
 			return setIsListViewOpened( false );
 		}
+		recordEvent( 'header_listview_sidebar_opened' );
 		return setIsListViewOpened( true );
 	};
 
@@ -135,7 +151,10 @@ export function Header() {
 							className="editor-history__undo"
 							isPressed={ false }
 							onMouseDown={ preventDefault }
-							onClick={ undoAction }
+							onClick={ () => {
+								void undoAction();
+								recordEvent( 'header_undo_icon_clicked' );
+							} }
 							disabled={ ! hasUndo }
 							icon={ undo }
 							label={ __( 'Undo', 'mailpoet' ) }
@@ -147,7 +166,10 @@ export function Header() {
 							className="editor-history__redo"
 							isPressed={ false }
 							onMouseDown={ preventDefault }
-							onClick={ redoAction }
+							onClick={ () => {
+								void redoAction();
+								recordEvent( 'header_redo_icon_clicked' );
+							} }
 							disabled={ ! hasRedo }
 							icon={ redo }
 							label={ __( 'Redo', 'mailpoet' ) }
@@ -187,6 +209,10 @@ export function Header() {
 								setIsBlockToolsCollapsed(
 									( collapsed ) => ! collapsed
 								);
+								recordEvent(
+									'header_blocks_tool_button_clicked',
+									{ isBlockToolsCollapsed }
+								);
 							} }
 							label={
 								isBlockToolsCollapsed
@@ -201,7 +227,7 @@ export function Header() {
 				! isBlockSelected ||
 				isBlockToolsCollapsed ) && (
 				<div className="editor-header__center edit-post-header__center">
-					{ hasDocumentNavigationHistory ? (
+					{ editorMode === 'template' ? (
 						<DocumentBar />
 					) : (
 						<CampaignName />
@@ -209,9 +235,16 @@ export function Header() {
 				</div>
 			) }
 			<div className="editor-header__settings edit-post-header__settings">
-				<SaveButton />
+				<SaveEmailButton />
 				<PreviewDropdown />
-				<SendButton />
+				{ hasNonEmailEdits ? (
+					<SaveAllButton />
+				) : (
+					<SendButton
+						validateContent={ validateContent }
+						isContentInvalid={ isInvalid }
+					/>
+				) }
 				<PinnedItems.Slot scope={ storeName } />
 				<MoreMenu />
 			</div>

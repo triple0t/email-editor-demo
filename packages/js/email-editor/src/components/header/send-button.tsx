@@ -1,16 +1,16 @@
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
 import {
-	store as editorStore,
 	// @ts-expect-error No types available for useEntitiesSavedStatesIsDirty
 	useEntitiesSavedStatesIsDirty,
 } from '@wordpress/editor';
 import { useEntityProp } from '@wordpress/core-data';
 import { MailPoetEmailData, storeName } from '../../store';
 import { useSelect } from '@wordpress/data';
-import { useContentValidation } from '../../hooks';
+import { useEditorMode } from '../../hooks';
+import { recordEvent } from '../../events';
 
-export function SendButton() {
+export function SendButton( { validateContent, isContentInvalid } ) {
 	const [ mailpoetEmail ] = useEntityProp(
 		'postType',
 		'mailpoet_email',
@@ -19,22 +19,21 @@ export function SendButton() {
 
 	const { isDirty } = useEntitiesSavedStatesIsDirty();
 
-	const { validateContent, isValid } = useContentValidation();
-	const { hasEmptyContent, isEmailSent, isEditingTemplate } = useSelect(
+	const { hasEmptyContent, isEmailSent } = useSelect(
 		( select ) => ( {
 			hasEmptyContent: select( storeName ).hasEmptyContent(),
 			isEmailSent: select( storeName ).isEmailSent(),
-			isEditingTemplate:
-				select( editorStore ).getCurrentPostType() === 'wp_template',
 		} ),
 		[]
 	);
 
+	const [ editorMode ] = useEditorMode();
+
 	const isDisabled =
-		isEditingTemplate ||
+		editorMode === 'template' ||
 		hasEmptyContent ||
 		isEmailSent ||
-		isValid ||
+		isContentInvalid ||
 		isDirty;
 
 	const mailpoetEmailData: MailPoetEmailData = mailpoetEmail;
@@ -42,6 +41,7 @@ export function SendButton() {
 		<Button
 			variant="primary"
 			onClick={ () => {
+				recordEvent( 'header_send_button_clicked' );
 				if ( validateContent() ) {
 					window.location.href = `admin.php?page=mailpoet-newsletters#/send/${ mailpoetEmailData.id }`;
 				}
