@@ -2,6 +2,9 @@
 
 namespace EmailEditorDemo;
 
+use EmailEditorDemo\Patterns\PatternsController;
+use EmailEditorDemo\Templates\TemplatesController;
+
 class EmailEditorDemoIntegration
 {
 
@@ -11,12 +14,20 @@ class EmailEditorDemoIntegration
 
   private EmailEditorDemoApiController $emailApiController;
 
+	private PatternsController $patternsController;
+
+	private TemplatesController $templatesController;
+
   public function __construct(
     EmailEditorPageRenderer $editorPageRenderer,
     EmailEditorDemoApiController $emailApiController,
+		PatternsController $patternsController,
+    TemplatesController $templatesController,
   ) {
     $this->editorPageRenderer = $editorPageRenderer;
     $this->emailApiController = $emailApiController;
+		$this->patternsController = $patternsController;
+    $this->templatesController = $templatesController;
   }
 
   public function initialize(): void
@@ -24,6 +35,10 @@ class EmailEditorDemoIntegration
     add_filter('mailpoet_email_editor_post_types', [$this, 'addEmailPostType']);
     add_filter('mailpoet_is_email_editor_page', [$this, 'isEditorPage'], 10, 1);
     add_filter('replace_editor', [$this, 'replaceEditor'], 10, 2);
+		// register patterns
+		$this->patternsController->registerPatterns();
+		// register templates
+    $this->templatesController->initialize();
     $this->extendEmailPostApi();
   }
 
