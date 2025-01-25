@@ -243,6 +243,20 @@ class Base
       }
     );
 
+	$container->set(
+		\EmailEditorDemo\Patterns\PatternsController::class,
+		function () {
+		  return new \EmailEditorDemo\Patterns\PatternsController();
+		}
+	);
+
+	$container->set(
+		\EmailEditorDemo\Templates\TemplatesController::class,
+		function () {
+		  return new \EmailEditorDemo\Templates\TemplatesController();
+		}
+	);
+
     $container->set(
       EmailEditorPageRenderer::class,
       function ($container) {
@@ -260,7 +274,9 @@ class Base
       function ($container) {
         return new EmailEditorDemoIntegration(
           $container->get(EmailEditorPageRenderer::class),
-          $container->get(EmailEditorDemoApiController::class)
+          $container->get(EmailEditorDemoApiController::class),
+          $container->get(\EmailEditorDemo\Patterns\PatternsController::class),
+          $container->get(\EmailEditorDemo\Templates\TemplatesController::class),
         );
       }
     );
