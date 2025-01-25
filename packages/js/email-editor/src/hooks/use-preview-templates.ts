@@ -1,7 +1,14 @@
-import { BlockInstance, parse } from '@wordpress/blocks';
+import { useMemo } from '@wordpress/element';
+import { parse } from '@wordpress/blocks';
+import { BlockInstance } from '@wordpress/blocks/index';
 import { useSelect } from '@wordpress/data';
 import { store as blockEditorStore } from '@wordpress/block-editor';
-import { storeName, EmailTemplatePreview, TemplatePreview } from '../store';
+import {
+	storeName,
+	EmailTemplatePreview,
+	TemplatePreview,
+	EmailEditorPostType,
+} from '../store';
 
 /**
  * We need to merge pattern blocks and template blocks for BlockPreview component.
@@ -33,62 +40,166 @@ function setPostContentInnerBlocks(
 	} );
 }
 
-export function usePreviewTemplates(): TemplatePreview[][] {
-	const { templates, patterns } = useSelect( ( select ) => {
-		const contentBlockId =
-			// @ts-expect-error getBlocksByName is not defined in types
-			select( blockEditorStore ).getBlocksByName(
-				'core/post-content'
-			)?.[ 0 ];
-		return {
-			templates: select( storeName ).getEmailTemplates(),
-			patterns:
-				// @ts-expect-error getPatternsByBlockTypes is not defined in types
-				select( blockEditorStore ).getPatternsByBlockTypes(
-					[ 'core/post-content' ],
-					contentBlockId
-				),
-		};
-	}, [] );
+const InternalTemplateCache = {};
 
-	if ( ! templates || ! patterns.length ) {
-		return [ [] ];
+type GenerateTemplateCssThemeType = {
+	postTemplateContent?: EmailTemplatePreview;
+};
+/**
+ * @param post
+ * @param allTemplates
+ */
+function generateTemplateContent(
+	post: EmailEditorPostType,
+	allTemplates: TemplatePreview[] = []
+): GenerateTemplateCssThemeType {
+	const contentTemplate = post.template;
+
+	const defaultReturnObject = {
+		postTemplateContent: null,
+	};
+
+	if ( ! contentTemplate ) {
+		return defaultReturnObject;
 	}
 
-	// Pick first pattern that comes from mailpoet and is for general email template
-	const contentPatternBlocksGeneral = patterns.find(
-		( pattern ) =>
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-			pattern?.templateTypes?.includes( 'email-general-template' )
-	)?.blocks as BlockInstance[];
+	if ( InternalTemplateCache[ contentTemplate ] ) {
+		return InternalTemplateCache[ contentTemplate ];
+	}
 
-	// Pick first pattern that comes from mailpoet and is for template with header and footer content separated
-	const contentPatternBlocks = patterns.find(
-		( pattern ) =>
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-			pattern?.templateTypes?.includes( 'email-template' )
-	)?.blocks as BlockInstance[];
+	const postTemplate = allTemplates.find(
+		( template ) => template.slug === contentTemplate
+	);
 
-	return [
-		templates.map( ( template: EmailTemplatePreview ): TemplatePreview => {
-			let parsedTemplate = parse( template.content?.raw );
-			parsedTemplate = setPostContentInnerBlocks(
-				parsedTemplate,
-				template.slug === 'email-general'
-					? contentPatternBlocksGeneral
-					: contentPatternBlocks
-			);
+	if ( ! postTemplate ) {
+		return defaultReturnObject;
+	}
 
+	const templateContent = {
+		postTemplateContent: postTemplate?.template,
+	};
+
+	InternalTemplateCache[ contentTemplate ] = templateContent;
+
+	return templateContent;
+}
+
+export function usePreviewTemplates(
+	customEmailContent = ''
+): [ TemplatePreview[], TemplatePreview[], boolean ] {
+	const { templates, patterns, emailPosts, hasEmailPosts } = useSelect(
+		( select ) => {
+			const contentBlockId =
+				// @ts-expect-error getBlocksByName is not defined in types
+				select( blockEditorStore ).getBlocksByName(
+					'core/post-content'
+				)?.[ 0 ];
+
+			const rawEmailPosts = select( storeName ).getSentEmailEditorPosts();
 			return {
-				slug: template.slug,
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-				contentParsed: parsedTemplate,
-				patternParsed:
-					template.slug === 'email-general'
-						? contentPatternBlocksGeneral
-						: contentPatternBlocks,
+				templates: select( storeName ).getEmailTemplates(),
+				patterns:
+					// @ts-expect-error getPatternsByBlockTypes is not defined in types
+					select( blockEditorStore ).getPatternsByBlockTypes(
+						[ 'core/post-content' ],
+						contentBlockId
+					),
+				emailPosts: rawEmailPosts,
+				hasEmailPosts: !! ( rawEmailPosts && rawEmailPosts?.length ),
+			};
+		},
+		[]
+	);
+
+	const allTemplates = useMemo( () => {
+		let contentPatterns = [];
+		const parsedCustomEmailContent =
+			customEmailContent && parse( customEmailContent );
+
+		// If there is a custom email content passed from outside we use it as email content for preview
+		// otherwise generate one preview per template and pattern
+		if ( parsedCustomEmailContent ) {
+			contentPatterns = [ { blocks: parsedCustomEmailContent } ];
+		} else {
+			contentPatterns = patterns.filter(
+				( pattern ) =>
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+					pattern?.templateTypes?.includes( 'email-template' )
+			);
+		}
+
+		if ( ! contentPatterns || ! templates ) {
+			return [];
+		}
+
+		const templateToPreview = [];
+		// We don't want to show the blank template in the list
+		templates
+			?.filter(
+				( template: EmailTemplatePreview ) =>
+					template.slug !== 'email-general'
+			)
+			?.forEach( ( template: EmailTemplatePreview ) => {
+				contentPatterns?.forEach( ( contentPattern ) => {
+					let parsedTemplate = parse( template.content?.raw );
+					parsedTemplate = setPostContentInnerBlocks(
+						parsedTemplate,
+						contentPattern.blocks
+					);
+					templateToPreview.push( {
+						id: template.id,
+						slug: template.slug,
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+						previewContentParsed: parsedTemplate,
+						emailParsed: contentPattern.blocks,
+						template,
+						category: 'basic', // TODO: This will be updated once template category is implemented
+						type: template.type,
+						displayName: contentPattern.title
+							? `${ template.title.rendered } - ${ contentPattern.title }`
+							: template.title.rendered,
+					} );
+				} );
+			} );
+		return templateToPreview;
+	}, [ templates, patterns, customEmailContent ] );
+
+	const allEmailPosts = useMemo( () => {
+		return emailPosts?.map( ( post: EmailEditorPostType ) => {
+			const { postTemplateContent } = generateTemplateContent(
+				post,
+				allTemplates
+			);
+			const parsedPostContent = parse( post.content?.raw );
+
+			let parsedPostContentWithTemplate = parsedPostContent;
+
+			if ( postTemplateContent?.content?.raw ) {
+				parsedPostContentWithTemplate = setPostContentInnerBlocks(
+					parse( postTemplateContent?.content?.raw ),
+					parsedPostContent
+				);
+			}
+			const template = {
+				...post,
+				title: {
+					raw: post?.mailpoet_data?.subject || post.title.raw,
+					rendered:
+						post?.mailpoet_data?.subject || post.title.rendered, // use MailPoet subject as title
+				},
+			};
+			return {
+				id: post.id,
+				slug: post.slug,
+				previewContentParsed: parsedPostContentWithTemplate,
+				emailParsed: parsedPostContent,
+				category: 'recent',
+				type: post.type,
+				displayName: template.title.rendered,
 				template,
 			};
-		} ),
-	];
+		} ) as unknown as TemplatePreview[];
+	}, [ emailPosts, allTemplates ] );
+
+	return [ allTemplates || [], allEmailPosts || [], hasEmailPosts ];
 }

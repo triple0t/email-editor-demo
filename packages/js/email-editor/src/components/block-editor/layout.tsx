@@ -25,7 +25,11 @@ import { VisualEditor } from './visual-editor/visual-editor';
 
 import { TemplateSelection } from '../template-select';
 
+import { recordEventOnce } from '../../events';
+
 export function Layout() {
+	recordEventOnce( 'editor_layout_loaded' );
+
 	const {
 		isFullscreenActive,
 		isSidebarOpened,

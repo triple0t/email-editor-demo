@@ -1,120 +1,162 @@
-// @ts-expect-error No types available for this component
-import { BlockPreview } from '@wordpress/block-editor';
+/**
+ * WordPress dependencies
+ */
+import { useState, useEffect, memo } from '@wordpress/element';
 import { store as editorStore } from '@wordpress/editor';
 import { dispatch } from '@wordpress/data';
-import {
-	Modal,
-	__experimentalHStack as HStack, // eslint-disable-line
-	Button,
-} from '@wordpress/components';
-import { Async } from './async';
+import { Modal, Button, Flex, FlexItem } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
+
+/**
+ * Internal dependencies
+ */
 import { usePreviewTemplates } from '../../hooks';
-import { storeName, TemplatePreview } from '../../store';
+import {
+	EmailEditorPostType,
+	storeName,
+	TemplateCategory,
+	TemplatePreview,
+} from '../../store';
+import { TemplateList } from './template-list';
+import { TemplateCategoriesListSidebar } from './template-categories-list-sidebar';
+import { recordEvent, recordEventOnce } from '../../events';
 
-const BLANK_TEMPLATE = 'email-general';
+const TemplateCategories: Array< { name: TemplateCategory; label: string } > = [
+	{
+		name: 'recent',
+		label: 'Recent',
+	},
+	{
+		name: 'basic',
+		label: 'Basic',
+	},
+];
 
-export function SelectTemplateModal( { onSelectCallback } ) {
-	const [ templates ] = usePreviewTemplates();
+function SelectTemplateBody( {
+	hasEmailPosts,
+	templates,
+	handleTemplateSelection,
+} ) {
+	const [ selectedCategory, setSelectedCategory ] = useState(
+		TemplateCategories[ 1 ].name // Show the “Basic” category by default
+	);
+
+	const handleCategorySelection = ( category: TemplateCategory ) => {
+		recordEvent( 'template_select_modal_category_change', { category } );
+		setSelectedCategory( category );
+	};
+
+	useEffect( () => {
+		setTimeout( () => {
+			if ( hasEmailPosts ) {
+				setSelectedCategory( TemplateCategories[ 0 ].name );
+			}
+		}, 1000 ); // using setTimeout to ensure the template styles are available before block preview
+	}, [ hasEmailPosts ] );
+
+	return (
+		<div className="block-editor-block-patterns-explorer">
+			<TemplateCategoriesListSidebar
+				templateCategories={ TemplateCategories }
+				selectedCategory={ selectedCategory }
+				onClickCategory={ handleCategorySelection }
+			/>
+
+			<TemplateList
+				templates={ templates }
+				onTemplateSelection={ handleTemplateSelection }
+				selectedCategory={ selectedCategory }
+			/>
+		</div>
+	);
+}
+
+const MemorizedSelectTemplateBody = memo( SelectTemplateBody );
+
+export function SelectTemplateModal( {
+	onSelectCallback,
+	closeCallback = null,
+	previewContent = '',
+} ) {
+	const templateSelectMode = previewContent ? 'swap' : 'new';
+	recordEventOnce( 'template_select_modal_opened', { templateSelectMode } );
+
+	const [ templates, emailPosts, hasEmailPosts ] =
+		usePreviewTemplates( previewContent );
+
+	const hasTemplates = templates?.length > 0;
 
 	const handleTemplateSelection = ( template: TemplatePreview ) => {
-		void dispatch( editorStore ).resetEditorBlocks(
-			template.patternParsed
-		);
+		const templateIsPostContent = template.type === 'mailpoet_email';
+
+		const postContent = template.template as unknown as EmailEditorPostType;
+
+		recordEvent( 'template_select_modal_template_selected', {
+			templateSlug: template.slug,
+			templateSelectMode,
+			templateType: template.type,
+		} );
+
+		// When we provide previewContent, we don't want to reset the blocks
+		if ( ! previewContent ) {
+			void dispatch( editorStore ).resetEditorBlocks(
+				template.emailParsed
+			);
+		}
+
 		void dispatch( storeName ).setTemplateToPost(
-			template.slug,
-			template.template.mailpoet_email_theme ?? {}
+			templateIsPostContent ? postContent.template : template.slug
 		);
 		onSelectCallback();
 	};
 
 	const handleCloseWithoutSelection = () => {
-		const blankTemplate = templates.find(
-			( template ) => template.slug === BLANK_TEMPLATE
-		) as unknown as TemplatePreview;
-		if ( ! blankTemplate ) {
+		const template = templates[ 0 ] ?? null;
+		if ( ! template ) {
 			return;
-		} // Prevent close if blank template is still not loaded
-		handleTemplateSelection( blankTemplate );
+		} // Prevent closing when templates are not loaded
+		recordEvent(
+			'template_select_modal_handle_close_without_template_selected'
+		);
+		handleTemplateSelection( template );
 	};
 
 	return (
 		<Modal
-			title="Select a template"
-			onRequestClose={ () => handleCloseWithoutSelection() }
+			title={ __( 'Start with an email preset', 'mailpoet' ) }
+			onRequestClose={ () => {
+				recordEvent( 'template_select_modal_closed', {
+					templateSelectMode,
+				} );
+				return closeCallback
+					? closeCallback()
+					: handleCloseWithoutSelection();
+			} }
 			isFullScreen
 		>
-			<div className="block-editor-block-patterns-explorer">
-				<div className="block-editor-block-patterns-explorer__sidebar">
-					<div className="block-editor-block-patterns-explorer__sidebar__categories-list">
-						<Button
-							key="category"
-							label="Category"
-							className="block-editor-block-patterns-explorer__sidebar__categories-list__item"
-							isPressed
-							onClick={ () => {} }
-						>
-							Dummy Category
-						</Button>
-					</div>
-				</div>
-				<div className="block-editor-block-patterns-explorer__list">
-					<div
-						className="block-editor-block-patterns-list"
-						role="listbox"
-					>
-						{ templates.map( ( template ) => (
-							<div
-								key={ template.slug }
-								className="block-editor-block-patterns-list__list-item"
-							>
-								<div
-									className="block-editor-block-patterns-list__item"
-									role="button"
-									tabIndex={ 0 }
-									onClick={ () => {
-										handleTemplateSelection( template );
-									} }
-									onKeyPress={ ( event ) => {
-										if (
-											event.key === 'Enter' ||
-											event.key === ' '
-										) {
-											handleTemplateSelection( template );
-										}
-									} }
-								>
-									<Async
-										placeholder={
-											<p>rendering template</p>
-										}
-									>
-										<BlockPreview
-											blocks={ template.contentParsed }
-											viewportWidth={ 900 }
-											minHeight={ 300 }
-											additionalStyles={ [
-												{
-													css: template.template
-														.email_theme_css,
-												},
-											] }
-										/>
+			<MemorizedSelectTemplateBody
+				hasEmailPosts={ hasEmailPosts }
+				templates={ [ ...templates, ...emailPosts ] }
+				handleTemplateSelection={ handleTemplateSelection }
+			/>
 
-										<HStack className="block-editor-patterns__pattern-details">
-											<div className="block-editor-block-patterns-list__item-title">
-												{
-													template.template.title
-														.rendered
-												}
-											</div>
-										</HStack>
-									</Async>
-								</div>
-							</div>
-						) ) }
-					</div>
-				</div>
-			</div>
+			<Flex className="email-editor-modal-footer" justify="flex-end">
+				<FlexItem>
+					<Button
+						variant="tertiary"
+						className="email-editor-start_from_scratch_button"
+						onClick={ () => {
+							recordEvent(
+								'template_select_modal_start_from_scratch_clicked'
+							);
+							return handleCloseWithoutSelection();
+						} }
+						isBusy={ ! hasTemplates }
+					>
+						{ __( 'Start from scratch', 'mailpoet' ) }
+					</Button>
+				</FlexItem>
+			</Flex>
 		</Modal>
 	);
 }

@@ -2,6 +2,9 @@
 
 namespace EmailEditorDemo;
 
+use EmailEditorDemo\Patterns\PatternsController;
+use EmailEditorDemo\Templates\TemplatesController;
+
 class EmailEditorDemoIntegration
 {
 
@@ -11,12 +14,20 @@ class EmailEditorDemoIntegration
 
   private EmailEditorDemoApiController $emailApiController;
 
+	private PatternsController $patternsController;
+
+	private TemplatesController $templatesController;
+
   public function __construct(
     EmailEditorPageRenderer $editorPageRenderer,
     EmailEditorDemoApiController $emailApiController,
+		PatternsController $patternsController,
+    TemplatesController $templatesController,
   ) {
     $this->editorPageRenderer = $editorPageRenderer;
     $this->emailApiController = $emailApiController;
+		$this->patternsController = $patternsController;
+    $this->templatesController = $templatesController;
   }
 
   public function initialize(): void
@@ -24,6 +35,10 @@ class EmailEditorDemoIntegration
     add_filter('mailpoet_email_editor_post_types', [$this, 'addEmailPostType']);
     add_filter('mailpoet_is_email_editor_page', [$this, 'isEditorPage'], 10, 1);
     add_filter('replace_editor', [$this, 'replaceEditor'], 10, 2);
+		// register patterns
+		$this->patternsController->registerPatterns();
+		// register templates
+    $this->templatesController->initialize();
     $this->extendEmailPostApi();
   }
 
@@ -57,14 +72,11 @@ class EmailEditorDemoIntegration
     if ($isEditorPage) {
       return $isEditorPage;
     }
+
     // We need to check early if we are on the email editor page. The check runs early so we can't use current_screen() here.
     if (is_admin() && isset($_GET['post']) && isset($_GET['action']) && $_GET['action'] === 'edit') {
       $post = get_post((int)$_GET['post']);
       return $post && $post->post_type === self::MAILPOET_EMAIL_POST_TYPE; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
-    }
-
-    if (is_admin() && isset($_GET['post_type']) && $_GET['post_type'] === self::MAILPOET_EMAIL_POST_TYPE) {
-      return true;
     }
 
     return false;

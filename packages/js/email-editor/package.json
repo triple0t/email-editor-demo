@@ -14,12 +14,12 @@
 		"lint:js": "wp-scripts lint-js './src/**/*.{js,jsx,json,ts,tsx,yml,yaml}'",
 		"lint:js-fix": "wp-scripts lint-js './src/**/*.{js,jsx,json,ts,tsx}' --fix",
 		"check-types": "NODE_OPTIONS=--max_old_space_size=2048 tsc --noEmit",
-		"format": "./node_modules/.bin/prettier --config .prettierrc.js --write 'src/**/*.{js,jsx,json,ts,tsx,yml,yaml}'"
+		"format": "./node_modules/.bin/prettier --config .prettierrc.js --write 'src/**/*.{js,jsx,json,ts,tsx,yml,yaml,scss}'"
 	},
 	"lint-staged": {
-		"*.{js,jsx,json,ts,tsx,yml,yaml}": "npm run format",
-		"*.{scss,css}": "npm run lint:css",
-		"*.{js,jsx,ts,tsx}": "npm run lint:js"
+		"*.{js,jsx,json,ts,tsx,yml,yaml,scss}": "pnpm run format",
+		"*.{scss,css}": "pnpm run lint:css",
+		"*.{js,jsx,ts,tsx}": "pnpm run lint:js"
 	},
 	"dependencies": {
 		"@wordpress/api-fetch": "^7.0.0",
@@ -40,7 +40,7 @@
 		"@wordpress/html-entities": "^4.0.0",
 		"@wordpress/i18n": "^5.0.0",
 		"@wordpress/icons": "^10.0.0",
-		"@wordpress/interface": "^6.0.0",
+		"@wordpress/interface": "^8.2.0",
 		"@wordpress/is-shallow-equal": "^5.0.0",
 		"@wordpress/keyboard-shortcuts": "^5.0.0",
 		"@wordpress/keycodes": "^4.0.0",
@@ -48,7 +48,7 @@
 		"@wordpress/notices": "^5.0.0",
 		"@wordpress/preferences": "^4.0.0",
 		"@wordpress/private-apis": "^1.0.0",
-		"@wordpress/rich-text": "^7.0.0",
+		"@wordpress/rich-text": "^7.14.0",
 		"@wordpress/url": "^4.0.0",
 		"classnames": "^2.5.1",
 		"deepmerge": "^4.3.1",

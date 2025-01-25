@@ -6,7 +6,8 @@ import { useEffect, useState } from '@wordpress/element';
 import { store as editorStore } from '@wordpress/editor';
 import { __ } from '@wordpress/i18n';
 // eslint-disable-next-line
-import { __experimentalConfirmDialog as ConfirmDialog } from '@wordpress/components'; // eslint-disable-line
+import { __experimentalConfirmDialog as ConfirmDialog } from '@wordpress/components';
+import { recordEvent, recordEventOnce } from '../../../events'; // eslint-disable-line
 
 /**
  * Component that:
@@ -44,6 +45,7 @@ export default function EditTemplateBlocksNotification( { contentRef } ) {
 				return;
 			}
 			setIsDialogOpen( true );
+			recordEventOnce( 'edit_template_blocks_notification_opened' );
 		};
 
 		const canvas = contentRef.current;
@@ -63,12 +65,22 @@ export default function EditTemplateBlocksNotification( { contentRef } ) {
 					postId: templateId,
 					postType: 'wp_template',
 				} );
+				recordEvent(
+					'edit_template_blocks_notification_edit_template_button_clicked',
+					{ templateId }
+				);
 			} }
-			onCancel={ () => setIsDialogOpen( false ) }
+			onCancel={ () => {
+				setIsDialogOpen( false );
+				recordEvent(
+					'edit_template_blocks_notification_cancel_button_clicked',
+					{ templateId }
+				);
+			} }
 			size="medium"
 		>
 			{ __(
-				'You’ve tried to select a block that is part of a template, which may be used on other emails. Would you like to edit the template?',
+				'The block you’ve selected is part of a template that might be used in other emails. Are you sure you want to edit the template?',
 				'mailpoet'
 			) }
 		</ConfirmDialog>

@@ -1,6 +1,8 @@
+/**
+ * WordPress dependencies
+ */
 import { __ } from '@wordpress/i18n';
-import { useContext, useRef, useEffect } from '@wordpress/element';
-import { privateApis as componentsPrivateApis } from '@wordpress/components';
+import { useContext, useRef, useEffect, memo } from '@wordpress/element';
 import { useSelect, useDispatch } from '@wordpress/data';
 import {
 	BlockInspector,
@@ -8,32 +10,33 @@ import {
 } from '@wordpress/block-editor';
 import { ComplementaryArea } from '@wordpress/interface';
 import { drawerRight } from '@wordpress/icons';
-import { store as editorStore } from '@wordpress/editor';
+
+/**
+ * WordPress private dependencies
+ */
+import { Tabs } from '../../private-apis';
+
+/**
+ * Internal dependencies
+ */
 import {
 	storeName,
-	mainSidebarEmailTab,
+	mainSidebarDocumentTab,
 	mainSidebarBlockTab,
 	mainSidebarId,
 } from '../../store';
 import { Header } from './header';
 import { EmailSettings } from './email-settings';
 import { TemplateSettings } from './template-settings';
-import { unlock } from '../../lock-unlock';
+import { useEditorMode } from '../../hooks';
 
 import './index.scss';
-
-const { Tabs } = unlock( componentsPrivateApis );
+import { recordEvent } from '../../events';
 
 type Props = React.ComponentProps< typeof ComplementaryArea >;
 
 function SidebarContent( props: Props ) {
-	const { isEditingTemplate } = useSelect(
-		( select ) => ( {
-			isEditingTemplate:
-				select( editorStore ).getCurrentPostType() === 'wp_template',
-		} ),
-		[]
-	);
+	const [ editorMode ] = useEditorMode();
 
 	const tabListRef = useRef( null );
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
@@ -42,6 +45,7 @@ function SidebarContent( props: Props ) {
 	return (
 		<ComplementaryArea
 			identifier={ mainSidebarId }
+			closeLabel={ __( 'Close sidebar', 'mailpoet' ) }
 			headerClassName="editor-sidebar__panel-tabs"
 			className="edit-post-sidebar"
 			header={
@@ -56,8 +60,8 @@ function SidebarContent( props: Props ) {
 			{ ...props }
 		>
 			<Tabs.Context.Provider value={ tabsContextValue }>
-				<Tabs.TabPanel tabId={ mainSidebarEmailTab }>
-					{ isEditingTemplate ? (
+				<Tabs.TabPanel tabId={ mainSidebarDocumentTab }>
+					{ editorMode === 'template' ? (
 						<TemplateSettings />
 					) : (
 						<EmailSettings />
@@ -71,7 +75,7 @@ function SidebarContent( props: Props ) {
 	);
 }
 
-export function Sidebar( props: Props ) {
+function RawSidebar( props: Props ) {
 	const { toggleSettingsSidebarActiveTab } = useDispatch( storeName );
 	const { activeTab, selectedBlockId } = useSelect(
 		( select ) => ( {
@@ -87,18 +91,21 @@ export function Sidebar( props: Props ) {
 		if ( selectedBlockId ) {
 			void toggleSettingsSidebarActiveTab( mainSidebarBlockTab );
 		} else {
-			void toggleSettingsSidebarActiveTab( mainSidebarEmailTab );
+			void toggleSettingsSidebarActiveTab( mainSidebarDocumentTab );
 		}
 	}, [ selectedBlockId, toggleSettingsSidebarActiveTab ] );
 
 	return (
 		<Tabs
-			selectedTabId={ activeTab || mainSidebarEmailTab }
-			onSelect={ ( key ) =>
-				toggleSettingsSidebarActiveTab( key as string )
-			}
+			selectedTabId={ activeTab || mainSidebarDocumentTab }
+			onSelect={ ( key ) => {
+				recordEvent( 'sidebar_tab_selected', { tabKey: key } );
+				return toggleSettingsSidebarActiveTab( key as string );
+			} }
 		>
 			<SidebarContent { ...props } />
 		</Tabs>
 	);
 }
+
+export const Sidebar = memo( RawSidebar );

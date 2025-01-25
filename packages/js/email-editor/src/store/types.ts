@@ -1,5 +1,6 @@
-import { EditorSettings, EditorColor } from '@wordpress/block-editor';
-import { BlockInstance } from '@wordpress/blocks';
+import { EditorSettings, EditorColor } from '@wordpress/block-editor/index';
+import { BlockInstance } from '@wordpress/blocks/index';
+import { Post } from '@wordpress/core-data/build-types/entity-types/post';
 
 export enum SendingPreviewStatus {
 	SUCCESS = 'success',
@@ -165,6 +166,14 @@ export type EmailEditorUrls = {
 	listings: string;
 };
 
+export type PersonalizationTag = {
+	name: string;
+	token: string;
+	category: string;
+	attributes: string[];
+	valueToInsert: string;
+};
+
 export type State = {
 	inserterSidebar: {
 		isOpened: boolean;
@@ -178,6 +187,9 @@ export type State = {
 	postId: number;
 	editorSettings: EmailEditorSettings;
 	theme: EmailTheme;
+	styles: {
+		globalStylesPostId: number | null;
+	};
 	autosaveInterval: number;
 	cdnUrl: string;
 	urls: EmailEditorUrls;
@@ -188,6 +200,10 @@ export type State = {
 		isModalOpened: boolean;
 		isSendingPreviewEmail: boolean;
 		sendingPreviewStatus: SendingPreviewStatus | null;
+	};
+	personalizationTags: {
+		list: PersonalizationTag[];
+		isFetching: boolean;
 	};
 };
 
@@ -202,9 +218,6 @@ export type EmailTemplate = {
 	id: string;
 	slug: string;
 	content: string;
-	email_theme_css: string;
-	mailpoet_email_theme?: EmailTheme;
-	theme: string;
 	title: string;
 	type: string;
 };
@@ -224,14 +237,33 @@ export type EmailTemplatePreview = Omit<
 };
 
 export type TemplatePreview = {
+	id: string;
 	slug: string;
-	contentParsed: BlockInstance[];
-	patternParsed: BlockInstance[];
+	displayName: string;
+	previewContentParsed: BlockInstance[];
+	emailParsed: BlockInstance[];
 	template: EmailTemplatePreview;
+	category?: TemplateCategory;
+	type: string;
 };
+
+export type TemplateCategory = 'recent' | 'basic';
 
 export type Feature =
 	| 'fullscreenMode'
 	| 'showIconLabels'
 	| 'fixedToolbar'
 	| 'focusMode';
+
+export type MailPoetEmailPostContentExtended = {
+	id?: string;
+	subject: string;
+	preheader: string;
+	preview_url: string;
+	deleted_at?: string;
+};
+
+export type EmailEditorPostType = Omit< Post, 'type' > & {
+	type: 'mailpoet_email';
+	mailpoet_data?: MailPoetEmailPostContentExtended;
+};

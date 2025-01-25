@@ -3,9 +3,24 @@ import { store as coreDataStore } from '@wordpress/core-data';
 import { store as interfaceStore } from '@wordpress/interface';
 import { store as editorStore } from '@wordpress/editor';
 import { store as preferencesStore } from '@wordpress/preferences';
-import { serialize, BlockInstance } from '@wordpress/blocks';
+import { serialize } from '@wordpress/blocks';
+import { BlockInstance } from '@wordpress/blocks/index';
 import { storeName } from './constants';
-import { State, Feature, EmailTemplate } from './types';
+import { State, Feature, EmailTemplate, EmailEditorPostType } from './types';
+import { Post } from '@wordpress/core-data/build-types/entity-types/post';
+
+function getContentFromEntity( entity ): string {
+	if ( entity?.content && typeof entity.content === 'function' ) {
+		return entity.content( entity ) as string;
+	}
+	if ( entity?.blocks ) {
+		return serialize( entity.blocks );
+	}
+	if ( entity?.content ) {
+		return entity.content as string;
+	}
+	return '';
+}
 
 export const isFeatureActive = createRegistrySelector(
 	( select ) =>
@@ -50,7 +65,7 @@ export const isSaving = createRegistrySelector( ( select ) => (): boolean => {
 export const isEmpty = createRegistrySelector( ( select ) => (): boolean => {
 	const postId = select( storeName ).getEmailPostId();
 
-	const post = select( coreDataStore ).getEntityRecord(
+	const post: EmailEditorPostType = select( coreDataStore ).getEntityRecord(
 		'postType',
 		'mailpoet_email',
 		postId
@@ -59,7 +74,6 @@ export const isEmpty = createRegistrySelector( ( select ) => (): boolean => {
 		return true;
 	}
 
-	// @ts-expect-error Missing property in type
 	const { content, mailpoet_data: mailpoetData, title } = post;
 	return (
 		! content.raw &&
@@ -125,18 +139,22 @@ export const getEditedEmailContent = createRegistrySelector(
 			| undefined;
 
 		if ( record ) {
-			if ( record?.content && typeof record.content === 'function' ) {
-				return record.content( record ) as string;
-			}
-			if ( record?.blocks ) {
-				return serialize( record.blocks );
-			}
-			if ( record?.content ) {
-				return record.content as string;
-			}
+			return getContentFromEntity( record );
 		}
 		return '';
 	}
+);
+
+export const getSentEmailEditorPosts = createRegistrySelector(
+	( select ) => () =>
+		select( coreDataStore )
+			.getEntityRecords( 'postType', 'mailpoet_email', {
+				per_page: 30, // show a maximum of 30 for now
+				status: 'publish,sent', // show only sent emails
+			} )
+			?.filter(
+				( post: EmailEditorPostType ) => post?.content?.raw !== '' // filter out empty content
+			) || []
 );
 
 /**
@@ -186,11 +204,6 @@ export const getEditedPostTemplate = createRegistrySelector(
 	}
 );
 
-export const getTemplateContent = () => {
-	const template = getEditedPostTemplate();
-	return template?.content || '';
-};
-
 export const getCurrentTemplate = createRegistrySelector( ( select ) => () => {
 	const isEditingTemplate =
 		select( editorStore ).getCurrentPostType() === 'wp_template';
@@ -203,10 +216,33 @@ export const getCurrentTemplate = createRegistrySelector( ( select ) => () => {
 			'wp_template',
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 			templateId
-		);
+		) as unknown as EmailTemplate;
 	}
 	return getEditedPostTemplate();
 } );
+
+export const getCurrentTemplateContent = () => {
+	const template = getCurrentTemplate();
+	if ( template ) {
+		return getContentFromEntity( template );
+	}
+	return '';
+};
+
+export const getGlobalEmailStylesPost = createRegistrySelector(
+	( select ) => () => {
+		const postId = select( storeName ).getGlobalStylesPostId();
+
+		if ( postId ) {
+			return select( coreDataStore ).getEditedEntityRecord(
+				'postType',
+				'wp_global_styles',
+				postId
+			) as unknown as Post;
+		}
+		return getEditedPostTemplate();
+	}
+);
 
 /**
  * Retrieves the email templates.
@@ -220,10 +256,9 @@ export const getEmailTemplates = createRegistrySelector(
 			} )
 			// We still need to filter the templates because, in some cases, the API also returns custom templates
 			// ignoring the post_type filter in the query
-			?.filter(
-				( template ) =>
-					// @ts-expect-error Missing property in type
-					template.theme === 'mailpoet/mailpoet'
+			?.filter( ( template ) =>
+				// @ts-expect-error Missing property in type
+				template.post_types.includes( 'mailpoet_email' )
 			)
 );
 
@@ -252,6 +287,18 @@ export function getPreviewState( state: State ): State[ 'preview' ] {
 	return state.preview;
 }
 
+export function getPersonalizationTagsState(
+	state: State
+): State[ 'personalizationTags' ] {
+	return state.personalizationTags;
+}
+
+export function getPersonalizationTagsList(
+	state: State
+): State[ 'personalizationTags' ][ 'list' ] {
+	return state.personalizationTags.list;
+}
+
 export const getDeviceType = createRegistrySelector(
 	( select ) => () =>
 		// @ts-expect-error getDeviceType is missing in types.
@@ -278,6 +325,10 @@ export function isPremiumPluginActive( state: State ): boolean {
 
 export function getTheme( state: State ): State[ 'theme' ] {
 	return state.theme;
+}
+
+export function getGlobalStylesPostId( state: State ): number | null {
+	return state.styles.globalStylesPostId;
 }
 
 export function getUrls( state: State ): State[ 'urls' ] {

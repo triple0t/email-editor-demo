@@ -9,7 +9,7 @@ declare(strict_types = 1);
 namespace MailPoet\EmailEditor\Engine;
 
 use MailPoet\EmailEditor\Engine\Patterns\Patterns;
-use MailPoet\EmailEditor\Engine\Templates\Template_Preview;
+use MailPoet\EmailEditor\Engine\PersonalizationTags\Personalization_Tags_Registry;
 use MailPoet\EmailEditor\Engine\Templates\Templates;
 use WP_Post;
 use WP_Theme_JSON;
@@ -36,12 +36,6 @@ class Email_Editor {
 	 */
 	private Templates $templates;
 	/**
-	 * Property for the template preview.
-	 *
-	 * @var Template_Preview Template preview.
-	 */
-	private Template_Preview $template_preview;
-	/**
 	 * Property for the patterns.
 	 *
 	 * @var Patterns Patterns.
@@ -62,29 +56,36 @@ class Email_Editor {
 	private Send_Preview_Email $send_preview_email;
 
 	/**
+	 * Property for Personalization_Tags_Controller that allows initializing personalization tags.
+	 *
+	 * @var Personalization_Tags_Registry Personalization tags registry.
+	 */
+	private Personalization_Tags_Registry $personalization_tags_registry;
+
+	/**
 	 * Constructor.
 	 *
-	 * @param Email_Api_Controller $email_api_controller Email API controller.
-	 * @param Templates            $templates Templates.
-	 * @param Template_Preview     $template_preview Template preview.
-	 * @param Patterns             $patterns Patterns.
-	 * @param Settings_Controller  $settings_controller Settings controller.
-	 * @param Send_Preview_Email   $send_preview_email Preview email controller.
+	 * @param Email_Api_Controller          $email_api_controller Email API controller.
+	 * @param Templates                     $templates Templates.
+	 * @param Patterns                      $patterns Patterns.
+	 * @param Settings_Controller           $settings_controller Settings controller.
+	 * @param Send_Preview_Email            $send_preview_email Preview email controller.
+	 * @param Personalization_Tags_Registry $personalization_tags_controller Personalization tags registry that allows initializing personalization tags.
 	 */
 	public function __construct(
 		Email_Api_Controller $email_api_controller,
 		Templates $templates,
-		Template_Preview $template_preview,
 		Patterns $patterns,
 		Settings_Controller $settings_controller,
-		Send_Preview_Email $send_preview_email
+		Send_Preview_Email $send_preview_email,
+		Personalization_Tags_Registry $personalization_tags_controller
 	) {
-		$this->email_api_controller = $email_api_controller;
-		$this->templates            = $templates;
-		$this->template_preview     = $template_preview;
-		$this->patterns             = $patterns;
-		$this->settings_controller  = $settings_controller;
-		$this->send_preview_email   = $send_preview_email;
+		$this->email_api_controller          = $email_api_controller;
+		$this->templates                     = $templates;
+		$this->patterns                      = $patterns;
+		$this->settings_controller           = $settings_controller;
+		$this->send_preview_email            = $send_preview_email;
+		$this->personalization_tags_registry = $personalization_tags_controller;
 	}
 
 	/**
@@ -95,10 +96,11 @@ class Email_Editor {
 	public function initialize(): void {
 		do_action( 'mailpoet_email_editor_initialized' );
 		add_filter( 'mailpoet_email_editor_rendering_theme_styles', array( $this, 'extend_email_theme_styles' ), 10, 2 );
-		$this->register_block_templates();
 		$this->register_block_patterns();
-		$this->register_wmail_post_types();
+		$this->register_email_post_types();
+		$this->register_block_templates();
 		$this->register_email_post_send_status();
+		$this->register_personalization_tags();
 		$is_editor_page = apply_filters( 'mailpoet_is_email_editor_page', false );
 		if ( $is_editor_page ) {
 			$this->extend_email_post_api();
@@ -116,8 +118,8 @@ class Email_Editor {
 	private function register_block_templates(): void {
 		// Since we cannot currently disable blocks in the editor for specific templates, disable templates when viewing site editor. @see https://github.com/WordPress/gutenberg/issues/41062.
 		if ( strstr( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ) ), 'site-editor.php' ) === false ) {
-			$this->templates->initialize();
-			$this->template_preview->initialize();
+			$post_types = array_column( $this->get_post_types(), 'name' );
+			$this->templates->initialize( $post_types );
 		}
 	}
 
@@ -136,13 +138,23 @@ class Email_Editor {
 	 *
 	 * @return void
 	 */
-	private function register_wmail_post_types(): void {
+	private function register_email_post_types(): void {
 		foreach ( $this->get_post_types() as $post_type ) {
 			register_post_type(
 				$post_type['name'],
 				array_merge( $this->get_default_email_post_args(), $post_type['args'] )
 			);
 		}
+	}
+
+	/**
+	 * Register all personalization tags registered via
+	 * the mailpoet_email_editor_register_personalization_tags filter.
+	 *
+	 * @return void
+	 */
+	private function register_personalization_tags(): void {
+		$this->personalization_tags_registry->initialize();
 	}
 
 	/**
@@ -163,14 +175,15 @@ class Email_Editor {
 	 */
 	private function get_default_email_post_args(): array {
 		return array(
-			'public'            => false,
-			'hierarchical'      => false,
-			'show_ui'           => true,
-			'show_in_menu'      => false,
-			'show_in_nav_menus' => false,
-			'supports'          => array( 'editor', 'title', 'custom-fields' ), // 'custom-fields' is required for loading meta fields via API.
-			'has_archive'       => true,
-			'show_in_rest'      => true, // Important to enable Gutenberg editor.
+			'public'                 => false,
+			'hierarchical'           => false,
+			'show_ui'                => true,
+			'show_in_menu'           => false,
+			'show_in_nav_menus'      => false,
+			'supports'               => array( 'editor', 'title', 'custom-fields' ), // 'custom-fields' is required for loading meta fields via API.
+			'has_archive'            => true,
+			'show_in_rest'           => true, // Important to enable Gutenberg editor.
+			'default_rendering_mode' => 'template-locked',
 		);
 	}
 
@@ -227,15 +240,17 @@ class Email_Editor {
 				},
 			)
 		);
-	}
-
-	/**
-	 * Returns the schema for email theme data.
-	 *
-	 * @return array
-	 */
-	public function get_email_theme_data_schema(): array {
-		return ( new Email_Styles_Schema() )->get_schema();
+		register_rest_route(
+			'mailpoet-email-editor/v1',
+			'/get_personalization_tags',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $this->email_api_controller, 'get_personalization_tags' ),
+				'permission_callback' => function () {
+					return current_user_can( 'edit_posts' );
+				},
+			)
+		);
 	}
 
 	/**
