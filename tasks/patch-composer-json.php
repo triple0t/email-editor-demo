@@ -25,30 +25,14 @@ $replacements = [
     'file' => $composerJsonFilePath,
     'find' => [
       '"src/"',
-	  '"autoload-dev": {
-    "classmap": [
-      "tests/unit/"
-    ]
-  },',
   '"php": ">=7.4"'
     ],
     'replace' => [
 		'"src/",
 			"../../../core/"', // add the Demo plugin files for autoloading
-'"autoload-dev": {
-    "classmap": [
-      "tests/unit/"
-    ]
-  },
-	"repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/mailpoet/html2text"
-    }
-  ],',
   '"php": ">=7.4",
 		"pelago/emogrifier": "7.2.0",
-		"soundasleep/html2text": "dev-master"'
+		"soundasleep/html2text": "^2.1"'
     ],
   ],
 ];
