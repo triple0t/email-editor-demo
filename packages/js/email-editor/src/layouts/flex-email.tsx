@@ -2,31 +2,25 @@
  * External dependencies
  */
 import classnames from 'classnames';
-
-/**
- * WordPress dependencies
- */
 import { createHigherOrderComponent } from '@wordpress/compose';
 import { addFilter } from '@wordpress/hooks';
 import { getBlockSupport, hasBlockSupport } from '@wordpress/blocks';
 import { Block } from '@wordpress/blocks/index';
-
+import { __ } from '@wordpress/i18n';
+import { justifyLeft, justifyCenter, justifyRight } from '@wordpress/icons';
+import {
+	Flex,
+	FlexItem,
+	PanelBody,
+	__experimentalToggleGroupControl as ToggleGroupControl,
+	__experimentalToggleGroupControlOptionIcon as ToggleGroupControlOptionIcon,
+} from '@wordpress/components';
 import {
 	BlockControls,
 	InspectorControls,
 	// @ts-expect-error No types for this exist yet.
 	JustifyContentControl,
 } from '@wordpress/block-editor';
-import { justifyLeft, justifyCenter, justifyRight } from '@wordpress/icons';
-
-import {
-	Flex,
-	FlexItem,
-	PanelBody,
-	__experimentalToggleGroupControl as ToggleGroupControl, // eslint-disable-line
-	__experimentalToggleGroupControlOptionIcon as ToggleGroupControlOptionIcon, // eslint-disable-line
-} from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
 
 const layoutBlockSupportKey = '__experimentalEmailFlexLayout';
 
@@ -174,7 +168,7 @@ export function addAttribute( settings: Block ) {
  * @return {Function} Wrapped component.
  */
 export const withLayoutControls = createHigherOrderComponent(
-	// @ts-ignore No types for this exist yet.
+	// @ts-expect-error No types for this exist yet.
 	( BlockEdit ) => ( props ) => {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 		const supportLayout = hasLayoutBlockSupport( props.name );

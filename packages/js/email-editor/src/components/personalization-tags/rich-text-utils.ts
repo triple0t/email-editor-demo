@@ -1,7 +1,19 @@
+/**
+ * External dependencies
+ */
 import * as React from '@wordpress/element';
-import { PersonalizationTag } from '../../store';
 import { create } from '@wordpress/rich-text';
 import { RichTextFormatList } from '@wordpress/rich-text/build-types/types';
+
+/**
+ * Internal dependencies
+ */
+import { PersonalizationTag } from '../../store';
+
+type Replacement = {
+	attributes: Record< string, string >;
+	type: string;
+};
 
 function getChildElement( rootElement: HTMLElement ): HTMLElement | null {
 	let currentElement: HTMLElement | null = rootElement;
@@ -16,10 +28,7 @@ function getChildElement( rootElement: HTMLElement ): HTMLElement | null {
 
 function findReplacementIndex(
 	element: HTMLElement,
-	replacements: ( null | {
-		attributes: Record< string, string >;
-		type: string;
-	} )[]
+	replacements: ( null | Replacement )[]
 ): number | null {
 	// Iterate over the replacements array
 	for ( const [ index, replacement ] of replacements.entries() ) {
@@ -59,13 +68,13 @@ function findLatestFormatIndex(
 		// Check each format within the format list at the current index
 		for ( const format of formatList ) {
 			if (
-				// @ts-expect-error
+				// @ts-expect-error attributes property is missing in build type for RichTextFormatList type
 				format?.attributes &&
 				element.tagName.toLowerCase() ===
-					// @ts-expect-error
+					// @ts-expect-error tagName property is missing in build type for RichTextFormatList type
 					format.tagName?.toLowerCase() &&
 				element.getAttribute( 'data-link-href' ) ===
-					// @ts-expect-error
+					// @ts-expect-error attributes property is missing in build type for RichTextFormatList type
 					format?.attributes[ 'data-link-href' ]
 			) {
 				latestFormatIndex = index;
@@ -124,8 +133,7 @@ const getCursorPosition = (
 
 	const replacementIndex = findReplacementIndex(
 		previousSibling,
-		// @ts-expect-error
-		richTextValue.replacements
+		richTextValue.replacements as Replacement[]
 	);
 	if ( replacementIndex !== null ) {
 		return {

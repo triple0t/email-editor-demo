@@ -1,3 +1,6 @@
+/**
+ * External dependencies
+ */
 import * as React from '@wordpress/element';
 import { MenuGroup, MenuItem } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
@@ -7,7 +10,7 @@ const CategoryMenu = ( {
 	activeCategory,
 	onCategorySelect,
 }: {
-	groupedTags: Record< string, any[] >;
+	groupedTags: Record< string, unknown[] >;
 	activeCategory: string | null;
 	onCategorySelect: ( category: string | null ) => void;
 } ) => {
@@ -22,7 +25,7 @@ const CategoryMenu = ( {
 				onClick={ () => onCategorySelect( null ) }
 				className={ getMenuItemClass( null ) }
 			>
-				{ __( 'All' ) }
+				{ __( 'All', 'mailpoet' ) }
 			</MenuItem>
 			<div
 				className="mailpoet-personalization-tags-modal__menu-separator"
