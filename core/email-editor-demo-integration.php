@@ -2,6 +2,8 @@
 
 namespace EmailEditorDemo;
 
+use MailPoet\EmailEditor\Engine\PersonalizationTags\Personalization_Tag;
+use MailPoet\EmailEditor\Engine\PersonalizationTags\Personalization_Tags_Registry;
 use EmailEditorDemo\Patterns\PatternsController;
 use EmailEditorDemo\Templates\TemplatesController;
 
@@ -40,6 +42,7 @@ class EmailEditorDemoIntegration
 		// register templates
     $this->templatesController->initialize();
     $this->extendEmailPostApi();
+		$this->registerPersonalizationTags();
   }
 
   public function addEmailPostType(array $postTypes): array
@@ -99,4 +102,36 @@ class EmailEditorDemoIntegration
       'schema' => $this->emailApiController->getEmailDataSchema(),
     ]);
   }
+
+	public function registerPersonalizationTags() {
+		add_filter('mailpoet_email_editor_register_personalization_tags', function( Personalization_Tags_Registry $registry ): Personalization_Tags_Registry {
+			$registry->register(new Personalization_Tag(
+        __('Email', 'email-editor-demo'),
+        'mailpoet/subscriber-email', // testing using mailpoet -- not working
+        __('Subscriber', 'email-editor-demo'),
+        function (array $context, array $args = []): string {
+					return $context['recipient_email'] ?? '';
+				},
+      ));
+
+      // Site Personalization Tags
+      $registry->register(new Personalization_Tag(
+        __('Site Title', 'email-editor-demo'),
+        'mailpoet/site-title',
+        __('Site', 'email-editor-demo'), // testing using mailpoet -- not working
+        function (array $context, array $args = []): string {
+					return htmlspecialchars_decode(get_bloginfo('name'));
+				},
+      ));
+      $registry->register(new Personalization_Tag(
+        __('Homepage URL', 'email-editor-demo'),
+        'mailpoet/site-homepage-url',
+        __('Site', 'email-editor-demo'), // testing using mailpoet -- not working
+        function (array $context, array $args = []): string {
+					return get_bloginfo('url');
+				},
+      ));
+			return $registry;
+		});
+	}
 }

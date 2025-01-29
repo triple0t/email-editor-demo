@@ -3,7 +3,7 @@
         'name' => 'mailpoet/email-editor',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'b79be50ee8361cd215e58a3788f0ec63fe1260b4',
+        'reference' => 'f207b492dd8a1f5285e564c5191c4b7e56ef16cd',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'mailpoet/email-editor' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'b79be50ee8361cd215e58a3788f0ec63fe1260b4',
+            'reference' => 'f207b492dd8a1f5285e564c5191c4b7e56ef16cd',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -38,14 +38,12 @@
             'dev_requirement' => false,
         ),
         'soundasleep/html2text' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
-            'reference' => 'd907c8fc20605135b4ac29b7a2f43d8c1c6cddb8',
+            'pretty_version' => '2.1.0',
+            'version' => '2.1.0.0',
+            'reference' => '83502b6f8f1aaef8e2e238897199d64f284b4af3',
             'type' => 'library',
             'install_path' => __DIR__ . '/../soundasleep/html2text',
-            'aliases' => array(
-                0 => '9999999-dev',
-            ),
+            'aliases' => array(),
             'dev_requirement' => false,
         ),
         'symfony/css-selector' => array(

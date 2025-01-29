@@ -1,7 +1,8 @@
-html2text [![Build Status](https://travis-ci.org/soundasleep/html2text.svg?branch=master)](https://travis-ci.org/soundasleep/html2text) [![Total Downloads](https://poser.pugx.org/soundasleep/html2text/downloads.png)](https://packagist.org/packages/soundasleep/html2text)
+![example workflow](https://github.com/soundasleep/html2text/actions/workflows/test.yml/badge.svg) [![Total Downloads](https://poser.pugx.org/soundasleep/html2text/downloads.png)](https://packagist.org/packages/soundasleep/html2text)
 =========
 
-html2text is a very simple script that uses PHP's DOM methods to load from HTML, and then iterates over the resulting DOM to correctly output plain text. For example:
+html2text is a very simple script that uses DOM methods to convert HTML into a format similar to what would be
+rendered by a browser - perfect for places where you need a quick text representation. For example:
 
 ```html
 <html>
@@ -33,10 +34,12 @@ Hello, World!
 This is some e-mail content. Even though it has whitespace and newlines, the e-mail converter will handle it correctly.
 
 Even mismatched tags.
+
 A div
 Another div
 A div
 within a div
+
 [A link](http://foo.com)
 ```
 
@@ -49,7 +52,7 @@ You can use [Composer](http://getcomposer.org/) to add the [package](https://pac
 ```json
 {
   "require": {
-    "soundasleep/html2text": "~0.5"
+    "soundasleep/html2text": "~1.1"
   }
 }
 ```
@@ -57,24 +60,42 @@ You can use [Composer](http://getcomposer.org/) to add the [package](https://pac
 And then use it quite simply:
 
 ```php
-$text = Html2Text\Html2Text::convert($html);
+$text = \Soundasleep\Html2Text::convert($html);
 ```
 
 You can also include the supplied `html2text.php` and use `$text = convert_html_to_text($html);` instead.
 
+### Options
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| **ignore_errors** | `false` | Set to `true` to ignore any XML parsing errors. |
+| **drop_links** | `false` | Set to `true` to not render links as `[http://foo.com](My Link)`, but rather just `My Link`. |
+| **char_set** | `'auto'` | Specify a specific character set.  Pass multiple character sets (comma separated) to detect encoding, default is ASCII,UTF-8 |
+
+Pass along options as a second argument to `convert`, for example:
+
+```php
+$options = array(
+  'ignore_errors' => true,
+  // other options go here
+);
+$text = \Soundasleep\Html2Text::convert($html, $options);
+```
+
 ## Tests
 
-Some very basic tests are provided in the `tests/` directory. Run them with `composer install --dev && vendor/bin/phpunit`.
+Some very basic tests are provided in the `tests/` directory. Run them with `composer install && vendor/bin/phpunit`.
 
 ## Troubleshooting
 
 ### Class 'DOMDocument' not found
 
-You need to [install the PHP XML extension](https://github.com/soundasleep/html2text/issues/55) for your PHP version. e.g. `apt-get install php7.1-xml`
+You need to [install the PHP XML extension](https://github.com/soundasleep/html2text/issues/55) for your PHP version. e.g. `apt-get install php7.4-xml`
 
 ## License
 
-`html2text` is dual licensed under both [EPL v1.0](https://www.eclipse.org/legal/epl-v10.html) and [LGPL v3.0](http://www.gnu.org/licenses/lgpl.html), making it suitable for both Eclipse and GPL projects.
+`html2text` is [licensed under MIT](LICENSE.md), making it suitable for both Eclipse and GPL projects.
 
 ## Other versions
 

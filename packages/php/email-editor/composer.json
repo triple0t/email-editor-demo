@@ -16,16 +16,10 @@
       "tests/unit/"
     ]
   },
-	"repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/mailpoet/html2text"
-    }
-  ],
   "require": {
     "php": ">=7.4",
 		"pelago/emogrifier": "7.2.0",
-		"soundasleep/html2text": "dev-master"
+		"soundasleep/html2text": "^2.1"
   },
   "config": {
     "platform": {
