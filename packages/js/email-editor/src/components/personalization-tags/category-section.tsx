@@ -1,5 +1,12 @@
+/**
+ * External dependencies
+ */
 import { Button } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+
+/**
+ * Internal dependencies
+ */
 import { PersonalizationTag } from '../../store';
 
 const CategorySection = ( {
@@ -52,15 +59,16 @@ const CategorySection = ( {
 											onClick={ () => {
 												if ( onInsert ) {
 													onInsert(
-														item.token,
+														item.valueToInsert,
 														false
 													);
 												}
 											} }
 										>
-											{ __( 'Insert' ) }
+											{ __( 'Insert', 'mailpoet' ) }
 										</Button>
-										{ category === __( 'Link' ) &&
+										{ category ===
+											__( 'Link', 'mailpoet' ) &&
 											canInsertLink && (
 												<>
 													<Button
@@ -73,7 +81,8 @@ const CategorySection = ( {
 														} }
 													>
 														{ __(
-															'Insert as link'
+															'Insert as link',
+															'mailpoet'
 														) }
 													</Button>
 												</>

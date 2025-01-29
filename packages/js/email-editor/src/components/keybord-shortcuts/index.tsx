@@ -1,11 +1,18 @@
+/**
+ * External dependencies
+ */
 import { useSelect, useDispatch } from '@wordpress/data';
 import { useEffect } from '@wordpress/element';
 import { store as coreDataStore } from '@wordpress/core-data';
+import { __ } from '@wordpress/i18n';
 import {
 	useShortcut,
 	store as keyboardShortcutsStore,
 } from '@wordpress/keyboard-shortcuts';
-import { __ } from '@wordpress/i18n';
+
+/**
+ * Internal dependencies
+ */
 import { storeName } from '../../store';
 import { recordEvent } from '../../events';
 
@@ -60,7 +67,7 @@ export function KeyboardShortcuts(): null {
 		void registerShortcut( {
 			name: 'mailpoet/email-editor/undo',
 			category: 'block',
-			description: __( 'Undo your last changes.' ),
+			description: __( 'Undo your last changes.', 'mailpoet' ),
 			keyCombination: {
 				modifier: 'primary',
 				character: 'z',
@@ -70,7 +77,7 @@ export function KeyboardShortcuts(): null {
 		void registerShortcut( {
 			name: 'mailpoet/email-editor/redo',
 			category: 'block',
-			description: __( 'Redo your last undo.' ),
+			description: __( 'Redo your last undo.', 'mailpoet' ),
 			keyCombination: {
 				modifier: 'primaryShift',
 				character: 'z',

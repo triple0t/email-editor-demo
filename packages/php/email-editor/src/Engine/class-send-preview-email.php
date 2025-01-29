@@ -29,14 +29,24 @@ class Send_Preview_Email {
 	private Renderer $renderer;
 
 	/**
+	 * Instance of the Personalizer class used for rendering personalization tags.
+	 *
+	 * @var Personalizer $personalizer
+	 */
+	private Personalizer $personalizer;
+
+	/**
 	 * Send_Preview_Email constructor.
 	 *
-	 * @param Renderer $renderer renderer instance.
+	 * @param Renderer     $renderer renderer instance.
+	 * @param Personalizer $personalizer personalizer instance.
 	 */
 	public function __construct(
-		Renderer $renderer
+		Renderer $renderer,
+		Personalizer $personalizer
 	) {
-		$this->renderer = $renderer;
+		$this->renderer     = $renderer;
+		$this->personalizer = $personalizer;
 	}
 
 	/**
@@ -58,8 +68,21 @@ class Send_Preview_Email {
 		$email   = $data['email'];
 		$post_id = $data['postId'];
 
-		$post = $this->fetch_post( $post_id );
+		$post    = $this->fetch_post( $post_id );
+		$subject = $post->post_title;
 
+		$email_html_content = $this->render_html( $post );
+
+		return $this->send_email( $email, $subject, $email_html_content );
+	}
+
+	/**
+	 * Renders the HTML content of the post
+	 *
+	 * @param \WP_Post $post The WordPress post object.
+	 * @return string
+	 */
+	public function render_html( $post ): string {
 		$subject  = $post->post_title;
 		$language = get_bloginfo( 'language' );
 
@@ -70,9 +93,26 @@ class Send_Preview_Email {
 			$language
 		);
 
-		$email_html_content = $rendered_data['html'];
+		return $this->set_personalize_content( $rendered_data['html'] );
+	}
 
-		return $this->send_email( $email, $subject, $email_html_content );
+	/**
+	 * Personalize the content.
+	 *
+	 * @param string $content HTML content.
+	 * @return string
+	 */
+	public function set_personalize_content( string $content ): string {
+		$current_user = wp_get_current_user();
+		$subscriber   = ! empty( $current_user->ID ) ? $current_user : null;
+
+		$this->personalizer->set_context(
+			array(
+				'recipient_email' => $subscriber ? $subscriber->user_email : null,
+				'is_user_preview' => true,
+			)
+		);
+		return $this->personalizer->personalize_content( $content );
 	}
 
 	/**

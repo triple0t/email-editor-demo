@@ -1,13 +1,21 @@
+/**
+ * External dependencies
+ */
 import { useMemo, memo } from '@wordpress/element';
-// @ts-expect-error No types available for this component
-import { BlockPreview } from '@wordpress/block-editor';
 import { store as editorStore } from '@wordpress/editor';
 import { useSelect } from '@wordpress/data';
+import { Icon, info, blockDefault } from '@wordpress/icons';
+import { __ } from '@wordpress/i18n';
 import {
 	__experimentalHStack as HStack, // eslint-disable-line
 } from '@wordpress/components';
-import { Icon, info, blockDefault } from '@wordpress/icons';
-import { __ } from '@wordpress/i18n';
+// @ts-expect-error No types available for this component
+// eslint-disable-next-line
+import { BlockPreview } from '@wordpress/block-editor';
+
+/**
+ * Internal dependencies
+ */
 import { Async } from './async';
 import { TemplateCategory, TemplatePreview } from '../../store';
 import { useEmailCss } from '../../hooks';
@@ -25,10 +33,11 @@ function TemplateNoResults() {
 				className="block-editor-inserter__no-results-icon"
 				icon={ blockDefault }
 			/>
-			<p>{ __( 'No recent templates.' ) }</p>
+			<p>{ __( 'No recent templates.', 'mailpoet' ) }</p>
 			<p>
 				{ __(
-					'Your recent creations will appear here as soon as you begin.'
+					'Your recent creations will appear here as soon as you begin.',
+					'mailpoet'
 				) }
 			</p>
 		</div>

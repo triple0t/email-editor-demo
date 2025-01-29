@@ -1,24 +1,20 @@
-import {
-	MenuGroup,
-	MenuItem,
-	Button,
-	DropdownMenu,
-} from '@wordpress/components';
-import { useEntityProp } from '@wordpress/core-data';
+/**
+ * External dependencies
+ */
+import { MenuGroup, MenuItem, DropdownMenu } from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { Icon, external, check, mobile, desktop } from '@wordpress/icons';
+import { PostPreviewButton } from '@wordpress/editor';
+
+/**
+ * Internal dependencies
+ */
 import { SendPreviewEmail } from './send-preview-email';
 import { storeName } from '../../store';
 import { recordEvent } from '../../events';
 
 export function PreviewDropdown() {
-	const [ mailpoetEmailData ] = useEntityProp(
-		'postType',
-		'mailpoet_email',
-		'mailpoet_data'
-	);
-
 	const previewDeviceType = useSelect(
 		( select ) => select( storeName ).getDeviceType(),
 		[]
@@ -26,14 +22,9 @@ export function PreviewDropdown() {
 
 	const { changePreviewDeviceType, togglePreviewModal } =
 		useDispatch( storeName );
-	const newsletterPreviewUrl: string = mailpoetEmailData?.preview_url || '';
 
 	const changeDeviceType = ( newDeviceType: string ) => {
 		void changePreviewDeviceType( newDeviceType );
-	};
-
-	const openInNewTab = ( url: string ) => {
-		window.open( url, '_blank', 'noreferrer' );
 	};
 
 	const deviceIcons = {
@@ -97,29 +88,32 @@ export function PreviewDropdown() {
 								{ __( 'Send a test email', 'mailpoet' ) }
 							</MenuItem>
 						</MenuGroup>
-						{ newsletterPreviewUrl ? (
-							<MenuGroup>
-								<div className="edit-post-header-preview__grouping-external">
-									<Button
-										className="edit-post-header-preview__button-external components-menu-item__button"
-										onClick={ () => {
-											recordEvent(
-												'header_preview_dropdown_preview_in_new_tab_selected'
-											);
-											openInNewTab(
-												newsletterPreviewUrl
-											);
-										} }
-									>
-										{ __(
-											'Preview in new tab',
-											'mailpoet'
-										) }
-										<Icon icon={ external } />
-									</Button>
-								</div>
-							</MenuGroup>
-						) : null }
+						<MenuGroup>
+							<div className="edit-post-header-preview__grouping-external">
+								<PostPreviewButton
+									role="menuitem"
+									forceIsAutosaveable={ true }
+									aria-label={ __(
+										'Preview in new tab',
+										'mailpoet'
+									) }
+									textContent={
+										<>
+											{ __(
+												'Preview in new tab',
+												'mailpoet'
+											) }
+											<Icon icon={ external } />
+										</>
+									}
+									onPreview={ () =>
+										recordEvent(
+											'header_preview_dropdown_preview_in_new_tab_selected'
+										)
+									}
+								/>
+							</div>
+						</MenuGroup>
 					</>
 				) }
 			</DropdownMenu>
