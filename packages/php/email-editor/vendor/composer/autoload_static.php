@@ -16,15 +16,12 @@ class ComposerStaticInit3ec3d68813951a5994b8185678e256db
         array (
             'Symfony\\Polyfill\\Php80\\' => 23,
             'Symfony\\Component\\CssSelector\\' => 30,
+            'Soundasleep\\' => 12,
             'Sabberworm\\CSS\\' => 15,
         ),
         'P' => 
         array (
             'Pelago\\Emogrifier\\' => 18,
-        ),
-        'H' => 
-        array (
-            'Html2Text\\' => 10,
         ),
     );
 
@@ -37,6 +34,10 @@ class ComposerStaticInit3ec3d68813951a5994b8185678e256db
         array (
             0 => __DIR__ . '/..' . '/symfony/css-selector',
         ),
+        'Soundasleep\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/soundasleep/html2text/src',
+        ),
         'Sabberworm\\CSS\\' => 
         array (
             0 => __DIR__ . '/..' . '/sabberworm/php-css-parser/src',
@@ -44,10 +45,6 @@ class ComposerStaticInit3ec3d68813951a5994b8185678e256db
         'Pelago\\Emogrifier\\' => 
         array (
             0 => __DIR__ . '/..' . '/pelago/emogrifier/src',
-        ),
-        'Html2Text\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/soundasleep/html2text/src',
         ),
     );
 
