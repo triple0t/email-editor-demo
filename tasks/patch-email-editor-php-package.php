@@ -18,7 +18,7 @@ $replacements = [
 	  'use MailPoetVendor\Pelago\Emogrifier\CssInliner;'
     ],
     'replace' => [
-      'use Html2Text\Html2Text;',
+      'use Soundasleep\Html2Text;',
 	  'use Pelago\Emogrifier\CssInliner;'
     ],
   ],
