@@ -10,7 +10,7 @@ use EmailEditorDemo\Templates\TemplatesController;
 class EmailEditorDemoIntegration
 {
 
-  const MAILPOET_EMAIL_POST_TYPE = 'mailpoet_email';
+  const MAILPOET_EMAIL_POST_TYPE = 'editor_demo_mail';
 
   private EmailEditorPageRenderer $editorPageRenderer;
 

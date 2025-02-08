@@ -13,18 +13,14 @@ class EmailEditorPageRenderer
 
   private Theme_Controller $themeController;
 
-  private Cdn_Asset_Url $cdnAssetUrl;
-
 	private User_Theme $userTheme;
 
   public function __construct(
     Settings_Controller $settingsController,
-    Cdn_Asset_Url $cdnAssetUrl,
     Theme_Controller $themeController,
 		User_Theme $userTheme,
   ) {
     $this->settingsController = $settingsController;
-    $this->cdnAssetUrl = $cdnAssetUrl;
     $this->themeController = $themeController;
 		$this->userTheme = $userTheme;
   }
@@ -33,17 +29,18 @@ class EmailEditorPageRenderer
   {
     $postId = isset($_GET['post']) ? intval($_GET['post']) : 0;
     $post = get_post($postId);
-    if (!$post instanceof \WP_Post || $post->post_type !== EmailEditorDemoIntegration::MAILPOET_EMAIL_POST_TYPE) { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+		$currentPostType = $post->post_type;
+    if (!$post instanceof \WP_Post || $currentPostType !== EmailEditorDemoIntegration::MAILPOET_EMAIL_POST_TYPE) { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
       return;
     }
 
 		// Email editor rich text JS - Because the Personalization Tags depend on Gutenberg 19.8.0 and higher
     // the following code replaces used Rich Text for the version containing the necessary changes.
-    $assetsParams = require EMAIL_EDITOR_DEMO_PATH . '/core/js/rich-text.asset.php';
+    $assetsParams = require EMAIL_EDITOR_DEMO_PATH . '/packages/js/email-editor/assets/rich-text.asset.php';
     wp_deregister_script('wp-rich-text');
     wp_enqueue_script(
       'wp-rich-text',
-      EMAIL_EDITOR_DEMO_URL . '/core/js/rich-text.js',
+      EMAIL_EDITOR_DEMO_URL . '/packages/js/email-editor/assets/rich-text.js',
       $assetsParams['dependencies'],
       $assetsParams['version'],
       true
@@ -87,26 +84,20 @@ class EmailEditorPageRenderer
       );
     }
 
-
-    $jsonAPIRoot = rtrim(esc_url_raw(admin_url('admin-ajax.php')), '/');
-    $token = wp_create_nonce('mailpoet_token');
-    $apiVersion = 'v1';
     $currentUserEmail = wp_get_current_user()->user_email;
     wp_localize_script(
       'mailpoet_email_editor',
       'MailPoetEmailEditor',
       [
-        'json_api_root' => esc_js($jsonAPIRoot),
-        'api_token' => esc_js($token),
-        'api_version' => esc_js($apiVersion),
-        'cdn_url' => esc_js($this->cdnAssetUrl->generate_cdn_url("")),
-        'is_premium_plugin_active' => false,
+        'current_post_type' => esc_js($currentPostType),
+        'current_post_id' => $post->ID,
         'current_wp_user_email' => esc_js($currentUserEmail),
         'editor_settings' => $this->settingsController->get_settings(),
         'editor_theme' => $this->themeController->get_base_theme()->get_raw_data(),
-				'user_theme_post_id' => $this->userTheme->get_user_theme_post()->ID,
+        'user_theme_post_id' => $this->userTheme->get_user_theme_post()->ID,
         'urls' => [
           'listings' => admin_url('edit.php?post_type=' . EmailEditorDemoIntegration::MAILPOET_EMAIL_POST_TYPE),
+          'send' => admin_url('edit.php?post_type=' . EmailEditorDemoIntegration::MAILPOET_EMAIL_POST_TYPE),
         ],
       ]
     );

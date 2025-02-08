@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "184b9a48b999f76122f67537f2227dd4",
+    "content-hash": "b2f07a7d2dbdf954820faacfe73d9fd8",
     "packages": [
         {
             "name": "pelago/emogrifier",

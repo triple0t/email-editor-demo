@@ -5,9 +5,11 @@
  * @package MailPoet\EmailEditor
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
-use Codeception\Stub;
+namespace EmailEditorDemo;
+
+// removed
 use MailPoet\EmailEditor\Container;
 use MailPoet\EmailEditor\Engine\Dependency_Check;
 use MailPoet\EmailEditor\Engine\Email_Api_Controller;
@@ -31,7 +33,7 @@ use MailPoet\EmailEditor\Engine\Templates\Templates;
 use MailPoet\EmailEditor\Engine\Theme_Controller;
 use MailPoet\EmailEditor\Engine\User_Theme;
 use MailPoet\EmailEditor\Integrations\Core\Initializer;
-use MailPoet\EmailEditor\Integrations\MailPoet\Blocks\BlockTypesController;
+// removed
 
 if ( (bool) getenv( 'MULTISITE' ) === true ) {
 	// REQUEST_URI needs to be set for WP to load the proper subsite where MailPoet is activated.
@@ -46,18 +48,18 @@ if ( (bool) getenv( 'MULTISITE' ) === true ) {
  * Note that the following are override in the docker-compose file
  * WP_ROOT, WP_ROOT_MULTISITE, WP_TEST_MULTISITE_SLUG
  */
-$console = new \Codeception\Lib\Console\Output( array() );
-$console->writeln( 'Loading WP core... (' . $wp_load_file . ')' );
-require_once $wp_load_file;
+// removed
+// removed
+// removed
 
-require_once __DIR__ . '/../../../../../mailpoet/lib/EmailEditor/Integrations/MailPoet/MailPoetCssInliner.php';
+// removed
 
 /**
  * Base class for MailPoet tests.
  *
  * @property IntegrationTester $tester
  */
-abstract class MailPoetTest extends \Codeception\TestCase\Test { // phpcs:ignore
+abstract class MailPoetEmailEditorContainerDefinition { // phpcs:ignore
 	/**
 	 * The DI container.
 	 *
@@ -104,14 +106,14 @@ abstract class MailPoetTest extends \Codeception\TestCase\Test { // phpcs:ignore
 	 */
 	public function setUp(): void {
 		$this->initContainer();
-		parent::setUp();
+		// removed
 	}
 
 	/**
 	 * Tear down after each test.
 	 */
 	public function _after() {
-		parent::_after();
+		// removed
 		$this->tester->cleanup();
 	}
 
@@ -129,7 +131,7 @@ abstract class MailPoetTest extends \Codeception\TestCase\Test { // phpcs:ignore
 		$errors = libxml_get_errors();
 		libxml_clear_errors();
 
-		$this->assertEmpty( $errors, 'HTML is not valid: ' . $html );
+		// removed
 	}
 
 	/**
@@ -141,7 +143,7 @@ abstract class MailPoetTest extends \Codeception\TestCase\Test { // phpcs:ignore
 	 */
 	public function getServiceWithOverrides( $id, array $overrides ) {
 		$instance = $this->di_container->get( $id );
-		return Stub::copy( $instance, $overrides );
+		// removed
 	}
 
 	/**
@@ -156,12 +158,7 @@ abstract class MailPoetTest extends \Codeception\TestCase\Test { // phpcs:ignore
 				return new Initializer();
 			}
 		);
-		$container->set(
-			BlockTypesController::class,
-			function () {
-				return $this->createMock( BlockTypesController::class );
-			}
-		);
+		// removed
 		// End: MailPoet plugin dependencies.
 		$container->set(
 			Theme_Controller::class,
@@ -261,7 +258,7 @@ abstract class MailPoetTest extends \Codeception\TestCase\Test { // phpcs:ignore
 					$container->get( Process_Manager::class ),
 					$container->get( Blocks_Registry::class ),
 					$container->get( Settings_Controller::class ),
-					new \MailPoet\EmailEditor\Integrations\MailPoet\MailPoetCssInliner(),
+					new \EmailEditorDemo\EditorDemoCssInliner(),
 					$container->get( Theme_Controller::class ),
 				);
 			}
@@ -272,7 +269,7 @@ abstract class MailPoetTest extends \Codeception\TestCase\Test { // phpcs:ignore
 				return new Renderer(
 					$container->get( Content_Renderer::class ),
 					$container->get( Templates::class ),
-					new \MailPoet\EmailEditor\Integrations\MailPoet\MailPoetCssInliner(),
+					new \EmailEditorDemo\EditorDemoCssInliner(),
 					$container->get( Theme_Controller::class ),
 				);
 			}

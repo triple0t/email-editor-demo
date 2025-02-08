@@ -27,7 +27,7 @@ import {
  * Internal dependencies
  */
 
-import { storeName } from '../../store';
+import { storeName, editorCurrentPostType } from '../../store';
 import { MoreMenu } from './more-menu';
 import { PreviewDropdown } from '../preview';
 import { SaveEmailButton } from './save-email-button';
@@ -95,7 +95,7 @@ export function Header() {
 
 	const { dirtyEntityRecords } = useEntitiesSavedStatesIsDirty();
 	const hasNonEmailEdits = dirtyEntityRecords.some(
-		( entity ) => entity.name !== 'mailpoet_email'
+		( entity ) => entity.name !== editorCurrentPostType
 	);
 
 	const preventDefault = ( event ) => {

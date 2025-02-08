@@ -10,9 +10,9 @@ import { PostPreviewButton } from '@wordpress/editor';
 /**
  * Internal dependencies
  */
-import { SendPreviewEmail } from './send-preview-email';
 import { storeName } from '../../store';
 import { recordEvent } from '../../events';
+import { SendPreviewEmail } from './send-preview-email';
 
 export function PreviewDropdown() {
 	const previewDeviceType = useSelect(
@@ -106,11 +106,12 @@ export function PreviewDropdown() {
 											<Icon icon={ external } />
 										</>
 									}
-									onPreview={ () =>
+									onPreview={ () => {
 										recordEvent(
 											'header_preview_dropdown_preview_in_new_tab_selected'
-										)
-									}
+										);
+										onClose();
+									} }
 								/>
 							</div>
 						</MenuGroup>

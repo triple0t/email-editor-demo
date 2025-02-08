@@ -69,6 +69,6 @@ class Newsletter {
         </div>
         <!-- /wp:group -->
       </div>
-      <!-- /wp:group -->';
+      <!-- /wp:group -->'; // we can now remove the subscription_unsubscribe_url shortcode.
   }
 }

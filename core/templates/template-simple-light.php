@@ -64,6 +64,6 @@ class SimpleLight {
   </p>
   <!-- /wp:paragraph -->
 </div>
-<!-- /wp:group -->';
+<!-- /wp:group -->';  // we can now remove the subscription_unsubscribe_url shortcode.
   }
 }

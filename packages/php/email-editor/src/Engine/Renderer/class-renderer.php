@@ -8,13 +8,13 @@
 declare(strict_types = 1);
 namespace MailPoet\EmailEditor\Engine\Renderer;
 
+require_once __DIR__ . '/../../../vendor/autoload.php';
+
 use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Content_Renderer;
 use MailPoet\EmailEditor\Engine\Templates\Templates;
 use MailPoet\EmailEditor\Engine\Theme_Controller;
 use Soundasleep\Html2Text;
-use Pelago\Emogrifier\CssInliner;
 use WP_Style_Engine;
-use WP_Theme_JSON;
 
 /**
  * Class Renderer
@@ -41,24 +41,35 @@ class Renderer {
 	 */
 	private Templates $templates;
 
+	/**
+	 * Css inliner
+	 *
+	 * @var Css_Inliner
+	 */
+	private Css_Inliner $css_inliner;
+
 	const TEMPLATE_FILE        = 'template-canvas.php';
 	const TEMPLATE_STYLES_FILE = 'template-canvas.css';
+
 
 	/**
 	 * Renderer constructor.
 	 *
 	 * @param Content_Renderer $content_renderer Content renderer.
 	 * @param Templates        $templates Templates.
+	 * @param Css_Inliner      $css_inliner CSS Inliner.
 	 * @param Theme_Controller $theme_controller Theme controller.
 	 */
 	public function __construct(
 		Content_Renderer $content_renderer,
 		Templates $templates,
+		Css_Inliner $css_inliner,
 		Theme_Controller $theme_controller
 	) {
 		$this->content_renderer = $content_renderer;
 		$this->templates        = $templates;
 		$this->theme_controller = $theme_controller;
+		$this->css_inliner      = $css_inliner;
 	}
 
 	/**
@@ -123,7 +134,7 @@ class Renderer {
 	 * @return string
 	 */
 	private function inline_css_styles( $template ) {
-		return CssInliner::fromHtml( $template )->inlineCss()->render();  // TODO: Install CssInliner.
+		return $this->css_inliner->from_html( $template )->inline_css()->render();
 	}
 
 	/**
@@ -134,8 +145,8 @@ class Renderer {
 	 */
 	private function render_text_version( $template ) {
 		$template = ( mb_detect_encoding( $template, 'UTF-8', true ) ) ? $template : mb_convert_encoding( $template, 'UTF-8', mb_list_encodings() );
-		$result   = Html2Text::convert( $template );  // TODO: Install Html2Text.
-		if ( false === $result ) {
+		$result   = Html2Text::convert( $template );
+		if ( ! $result ) {
 			return '';
 		}
 
