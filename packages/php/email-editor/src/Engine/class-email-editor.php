@@ -42,13 +42,6 @@ class Email_Editor {
 	 */
 	private Patterns $patterns;
 	/**
-	 * Property for the settings controller.
-	 *
-	 * @var Settings_Controller Settings controller.
-	 */
-	private Settings_Controller $settings_controller;
-
-	/**
 	 * Property for the send preview email controller.
 	 *
 	 * @var Send_Preview_Email Send Preview controller.
@@ -68,7 +61,6 @@ class Email_Editor {
 	 * @param Email_Api_Controller          $email_api_controller Email API controller.
 	 * @param Templates                     $templates Templates.
 	 * @param Patterns                      $patterns Patterns.
-	 * @param Settings_Controller           $settings_controller Settings controller.
 	 * @param Send_Preview_Email            $send_preview_email Preview email controller.
 	 * @param Personalization_Tags_Registry $personalization_tags_controller Personalization tags registry that allows initializing personalization tags.
 	 */
@@ -76,14 +68,12 @@ class Email_Editor {
 		Email_Api_Controller $email_api_controller,
 		Templates $templates,
 		Patterns $patterns,
-		Settings_Controller $settings_controller,
 		Send_Preview_Email $send_preview_email,
 		Personalization_Tags_Registry $personalization_tags_controller
 	) {
 		$this->email_api_controller          = $email_api_controller;
 		$this->templates                     = $templates;
 		$this->patterns                      = $patterns;
-		$this->settings_controller           = $settings_controller;
 		$this->send_preview_email            = $send_preview_email;
 		$this->personalization_tags_registry = $personalization_tags_controller;
 	}
@@ -99,12 +89,11 @@ class Email_Editor {
 		$this->register_block_patterns();
 		$this->register_email_post_types();
 		$this->register_block_templates();
-		$this->register_email_post_send_status();
+		$this->register_email_post_sent_status();
 		$this->register_personalization_tags();
 		$is_editor_page = apply_filters( 'mailpoet_is_email_editor_page', false );
 		if ( $is_editor_page ) {
 			$this->extend_email_post_api();
-			$this->settings_controller->init();
 		}
 		add_action( 'rest_api_init', array( $this, 'register_email_editor_api_routes' ) );
 		add_filter( 'mailpoet_email_editor_send_preview_email', array( $this->send_preview_email, 'send_preview_email' ), 11, 1 ); // allow for other filter methods to take precedent.
@@ -185,6 +174,7 @@ class Email_Editor {
 			'has_archive'            => true,
 			'show_in_rest'           => true, // Important to enable Gutenberg editor.
 			'default_rendering_mode' => 'template-locked',
+			'publicly_queryable'     => true,  // required by the preview in new tab feature.
 		);
 	}
 
@@ -193,16 +183,19 @@ class Email_Editor {
 	 *
 	 * @return void
 	 */
-	private function register_email_post_send_status(): void {
+	private function register_email_post_sent_status(): void {
+		$default_args = array(
+			'public'                    => false,
+			'exclude_from_search'       => true,
+			'internal'                  => true, // for now, we hide it, if we use the status in the listings we may flip this and following values.
+			'show_in_admin_all_list'    => false,
+			'show_in_admin_status_list' => false,
+			'private'                   => true, // required by the preview in new tab feature for sent post (newsletter). Posts are only visible to site admins and editors.
+		);
+		$args         = apply_filters( 'mailpoet_email_editor_post_sent_status_args', $default_args );
 		register_post_status(
 			'sent',
-			array(
-				'public'                    => false,
-				'exclude_from_search'       => true,
-				'internal'                  => true, // for now, we hide it, if we use the status in the listings we may flip this and following values.
-				'show_in_admin_all_list'    => false,
-				'show_in_admin_status_list' => false,
-			)
+			$args
 		);
 	}
 
@@ -270,13 +263,31 @@ class Email_Editor {
 	}
 
 	/**
+	 * Get the current post object
+	 *
+	 * @return array|mixed|WP_Post|null
+	 */
+	public function get_current_post() {
+		if ( isset( $_GET['post'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$current_post = get_post( intval( $_GET['post'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- data valid
+		} else {
+			$current_post = $GLOBALS['post'];
+		}
+		return $current_post;
+	}
+
+	/**
 	 * Use a custom page template for the email editor frontend rendering.
 	 *
 	 * @param string $template post template.
 	 * @return string
 	 */
-	public function load_email_preview_template( string $template ): string {
-		global $post;
+	public function load_email_preview_template( $template ) {
+		$post = $this->get_current_post();
+
+		if ( ! $post instanceof \WP_Post ) {
+			return $template;
+		}
 
 		$current_post_type = $post->post_type;
 
