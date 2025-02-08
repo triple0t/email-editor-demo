@@ -12,7 +12,7 @@ $composerJsonFilePath = __DIR__ . '/../packages/php/email-editor/composer.json';
 
 $composerJson = file_get_contents($composerJsonFilePath);
 
-if (str_contains($composerJson, 'pelago/emogrifier') && str_contains($composerJson, 'soundasleep/html2text')) {
+if (str_contains($composerJson, 'pelago/emogrifier')) {
 	// file already patched. skip
 	echo "composer.json file already patched. skipping... \n";
 	exit;
@@ -25,14 +25,13 @@ $replacements = [
     'file' => $composerJsonFilePath,
     'find' => [
       '"src/"',
-  '"php": ">=7.4"'
+  '"soundasleep/html2text": "^2.1"'
     ],
     'replace' => [
 		'"src/",
 			"../../../core/"', // add the Demo plugin files for autoloading
-  '"php": ">=7.4",
-		"pelago/emogrifier": "7.2.0",
-		"soundasleep/html2text": "^2.1"'
+  '"soundasleep/html2text": "^2.1",
+		"pelago/emogrifier": "7.2.0"'
     ],
   ],
 ];
