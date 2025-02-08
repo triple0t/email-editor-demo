@@ -16,6 +16,7 @@ import {
 	storeName,
 	TemplateCategory,
 	TemplatePreview,
+	editorCurrentPostType,
 } from '../../store';
 import { TemplateList } from './template-list';
 import { TemplateCategoriesListSidebar } from './template-categories-list-sidebar';
@@ -59,7 +60,7 @@ function SelectTemplateBody( {
 				setSelectedCategory( TemplateCategories[ 0 ].name );
 			}
 		}, 1000 ); // using setTimeout to ensure the template styles are available before block preview
-	}, [ hasEmailPosts ] );
+	}, [ hasEmailPosts, hideRecentCategory ] );
 
 	return (
 		<div className="block-editor-block-patterns-explorer">
@@ -94,7 +95,7 @@ export function SelectTemplateModal( {
 	const hasTemplates = templates?.length > 0;
 
 	const handleTemplateSelection = ( template: TemplatePreview ) => {
-		const templateIsPostContent = template.type === 'mailpoet_email';
+		const templateIsPostContent = template.type === editorCurrentPostType;
 
 		const postContent = template.template as unknown as EmailEditorPostType;
 

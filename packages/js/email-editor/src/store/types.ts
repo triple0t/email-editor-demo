@@ -195,9 +195,7 @@ export type State = {
 		globalStylesPostId: number | null;
 	};
 	autosaveInterval: number;
-	cdnUrl: string;
 	urls: EmailEditorUrls;
-	isPremiumPluginActive: boolean;
 	preview: {
 		deviceType: string;
 		toEmail: string;
@@ -268,6 +266,18 @@ export type MailPoetEmailPostContentExtended = {
 };
 
 export type EmailEditorPostType = Omit< Post, 'type' > & {
-	type: 'mailpoet_email';
+	type: string;
 	mailpoet_data?: MailPoetEmailPostContentExtended;
+};
+
+export type EmailContentValidationAction = {
+	label: string;
+	onClick: () => void;
+};
+
+export type EmailContentValidationRule = {
+	id: string;
+	test: ( emailContent: string ) => boolean;
+	message: string;
+	actions: EmailContentValidationAction[];
 };
