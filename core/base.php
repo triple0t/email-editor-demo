@@ -81,7 +81,6 @@ class Base extends MailPoetEmailEditorContainerDefinition
       function ($container) {
         return new EmailEditorPageRenderer(
           $container->get(Settings_Controller::class),
-          $container->get(Cdn_Asset_Url::class),
           $container->get(Theme_Controller::class),
           $container->get(User_Theme::class)
         );
