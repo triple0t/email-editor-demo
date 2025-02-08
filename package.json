@@ -10,6 +10,7 @@
 		"postinstall": "npm run build",
 		"build": "cd packages/js/email-editor && npm run build && cp -Rf build ../../..",
 		"dev": "cd packages/js/email-editor && npm run start",
+		"dev:dump-autoload": "cd packages/php/email-editor && composer dump-autoload",
 		"patch-files": "npm run patch:composer-json && npm run patch:email-editor-php-files && npm run patch:email-editor-js-files",
 		"patch:composer-json": "php -d memory_limit=-1 tasks/patch-composer-json.php",
 		"patch:email-editor-php-files": "php -d memory_limit=-1 tasks/patch-email-editor-php-package.php",
