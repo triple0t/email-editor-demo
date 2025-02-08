@@ -10,14 +10,14 @@ The main editor package library is split into two packages
 
 Try it out at: [WordPress Playground](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/triple0t/email-editor-demo/refs/heads/main/blueprint.json)
 
-Integration file is located at `/core`
+The Integration files are located at [/core](/core)
 
 ### How to use
 
 * Download this Repo as a zip
 * Upload to the WordPress site
 * Activate the plugin
-* Visit `wp-admin/edit.php?post_type=mailpoet_email`, edit the draft post
+* Visit `wp-admin/edit.php?post_type=editor_demo_mail`, edit the draft post
 
 
 ### Development
@@ -25,6 +25,8 @@ Integration file is located at `/core`
 **Note**: Ensure you have `npm` and `composer` in your system path
 
 * Run npm install: -> `npm install`
+* To run the watch server: -> `npm run dev`. Note: Please update `EMAIL_EDITOR_DEMO_USE_DEV_BUILD` to `true` to enusure the editor uses the development files.
+* If you update the php files, and need to update the autoloader -> `npm run dev:dump-autoload`
 
 You may pull the latests Email editor package from `https://github.com/mailpoet/mailpoet/`
 
