@@ -36,11 +36,11 @@ class EmailEditorPageRenderer
 
 		// Email editor rich text JS - Because the Personalization Tags depend on Gutenberg 19.8.0 and higher
     // the following code replaces used Rich Text for the version containing the necessary changes.
-    $assetsParams = require EMAIL_EDITOR_DEMO_PATH . '/core/js/rich-text.asset.php';
+    $assetsParams = require EMAIL_EDITOR_DEMO_PATH . '/packages/js/email-editor/assets/rich-text.asset.php';
     wp_deregister_script('wp-rich-text');
     wp_enqueue_script(
       'wp-rich-text',
-      EMAIL_EDITOR_DEMO_URL . '/core/js/rich-text.js',
+      EMAIL_EDITOR_DEMO_URL . '/packages/js/email-editor/assets/rich-text.js',
       $assetsParams['dependencies'],
       $assetsParams['version'],
       true
