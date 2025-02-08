@@ -11,7 +11,7 @@ namespace MailPoet\EmailEditor\Engine\Renderer;
 use MailPoet\EmailEditor\Engine\Renderer\ContentRenderer\Content_Renderer;
 use MailPoet\EmailEditor\Engine\Templates\Templates;
 use MailPoet\EmailEditor\Engine\Theme_Controller;
-use Html2Text\Html2Text;
+use Soundasleep\Html2Text;
 use Pelago\Emogrifier\CssInliner;
 use WP_Style_Engine;
 use WP_Theme_JSON;
