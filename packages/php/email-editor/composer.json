@@ -4,7 +4,8 @@
   "type": "library",
   "autoload": {
     "classmap": [
-      "src/"
+      "src/",
+			"../../../core/"
     ],
 		"files": [
 			"src/exceptions.php"
@@ -17,7 +18,8 @@
   },
   "require": {
     "php": ">=7.4",
-    "soundasleep/html2text": "^2.1"
+    "soundasleep/html2text": "^2.1",
+		"pelago/emogrifier": "7.2.0"
   },
   "config": {
     "platform": {
