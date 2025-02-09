@@ -1,0 +1,24 @@
+name: Add link to WordPress Playground
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  add-wordpress-playground:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
+      id-token: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Comment on PR with WordPress Playground details
+        uses: actions/github-script@v7
+        with:
+            script: |
+                const { run } = require('./.github/workflows/scripts/generate-playground-blueprint');
+                run({ github, context });
