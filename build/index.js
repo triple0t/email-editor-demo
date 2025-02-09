@@ -6384,10 +6384,7 @@ function PreviewDropdown() {
     textContent: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Preview in new tab', 'mailpoet'), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_icons__WEBPACK_IMPORTED_MODULE_10__["default"], {
       icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_11__["default"]
     })),
-    onPreview: () => {
-      (0,_events__WEBPACK_IMPORTED_MODULE_8__.recordEvent)('header_preview_dropdown_preview_in_new_tab_selected');
-      onClose();
-    }
+    onPreview: () => (0,_events__WEBPACK_IMPORTED_MODULE_8__.recordEvent)('header_preview_dropdown_preview_in_new_tab_selected')
   }))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_send_preview_email__WEBPACK_IMPORTED_MODULE_12__.SendPreviewEmail, null));
 }
 
@@ -9340,20 +9337,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   useContentValidation: () => (/* binding */ useContentValidation)
 /* harmony export */ });
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
-/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _wordpress_core_data__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/core-data */ "@wordpress/core-data");
-/* harmony import */ var _wordpress_core_data__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_core_data__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _wordpress_hooks__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/hooks */ "@wordpress/hooks");
-/* harmony import */ var _wordpress_hooks__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_hooks__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../store */ "./src/store/constants.ts");
-/* harmony import */ var _use_shallow_equal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./use-shallow-equal */ "./src/hooks/use-shallow-equal.ts");
-/* harmony import */ var _use_validation_notices__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./use-validation-notices */ "./src/hooks/use-validation-notices.ts");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/blocks */ "@wordpress/blocks");
+/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _wordpress_core_data__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/core-data */ "@wordpress/core-data");
+/* harmony import */ var _wordpress_core_data__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_core_data__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../store */ "./src/store/constants.ts");
+/* harmony import */ var _use_shallow_equal__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./use-shallow-equal */ "./src/hooks/use-shallow-equal.ts");
+/* harmony import */ var _use_validation_notices__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./use-validation-notices */ "./src/hooks/use-validation-notices.ts");
 /**
  * External dependencies
  */
+
+
 
 
 
@@ -9365,27 +9368,67 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-// Shared reference to an empty array for cases where it is important to avoid
-// returning a new array reference on every invocation
-const EMPTY_ARRAY = [];
 const useContentValidation = () => {
+  const {
+    contentBlockId,
+    hasFooter
+  } = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.useSelect)(select => {
+    const allBlocks = select(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.store).getBlocks();
+    const noBodyBlocks = allBlocks.filter(block => block.name !== 'mailpoet/powered-by-mailpoet' && block.name !== 'core/post-content');
+    // @ts-expect-error getBlocksByName is not defined in types
+    const blocks = select(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.store).getBlocksByName('core/post-content');
+    return {
+      contentBlockId: blocks?.[0],
+      hasFooter: noBodyBlocks.length > 0
+    };
+  });
   const {
     addValidationNotice,
     hasValidationNotice,
     removeValidationNotice
-  } = (0,_use_validation_notices__WEBPACK_IMPORTED_MODULE_4__.useValidationNotices)();
+  } = (0,_use_validation_notices__WEBPACK_IMPORTED_MODULE_6__.useValidationNotices)();
   const {
     editedContent,
-    editedTemplateContent
-  } = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_1__.useSelect)(mapSelect => ({
-    editedContent: mapSelect(_store__WEBPACK_IMPORTED_MODULE_5__.storeName).getEditedEmailContent(),
-    editedTemplateContent: mapSelect(_store__WEBPACK_IMPORTED_MODULE_5__.storeName).getCurrentTemplateContent()
+    editedTemplateContent,
+    postTemplateId
+  } = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.useSelect)(mapSelect => ({
+    editedContent: mapSelect(_store__WEBPACK_IMPORTED_MODULE_7__.storeName).getEditedEmailContent(),
+    editedTemplateContent: mapSelect(_store__WEBPACK_IMPORTED_MODULE_7__.storeName).getCurrentTemplateContent(),
+    postTemplateId: mapSelect(_store__WEBPACK_IMPORTED_MODULE_7__.storeName).getCurrentTemplate()?.id
   }));
-  const rules = (0,_wordpress_hooks__WEBPACK_IMPORTED_MODULE_3__.applyFilters)('mailpoet_email_editor_content_validation_rules', EMPTY_ARRAY);
-  const content = (0,_use_shallow_equal__WEBPACK_IMPORTED_MODULE_6__.useShallowEqual)(editedContent);
-  const templateContent = (0,_use_shallow_equal__WEBPACK_IMPORTED_MODULE_6__.useShallowEqual)(editedTemplateContent);
-  const validateContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useCallback)(() => {
+  const content = (0,_use_shallow_equal__WEBPACK_IMPORTED_MODULE_8__.useShallowEqual)(editedContent);
+  const templateContent = (0,_use_shallow_equal__WEBPACK_IMPORTED_MODULE_8__.useShallowEqual)(editedTemplateContent);
+  const contentLink = `<a data-link-href='[mailpoet/subscription-unsubscribe-url]' contenteditable='false' style='text-decoration: underline;' class='mailpoet-email-editor__personalization-tags-link'>${(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Unsubscribe', 'mailpoet')}</a> | <a data-link-href='[mailpoet/subscription-manage-url]' contenteditable='false' style='text-decoration: underline;' class='mailpoet-email-editor__personalization-tags-link'>${(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Manage subscription', 'mailpoet')}</a>`;
+  const rules = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useMemo)(() => {
+    const linksParagraphBlock = (0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_4__.createBlock)('core/paragraph', {
+      align: 'center',
+      fontSize: 'small',
+      content: contentLink
+    });
+    return [{
+      id: 'missing-unsubscribe-link',
+      test: emailContent => !emailContent.includes('[mailpoet/subscription-unsubscribe-url]'),
+      message: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('All emails must include an "Unsubscribe" link.', 'mailpoet'),
+      actions: [{
+        label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Insert link', 'mailpoet'),
+        onClick: () => {
+          if (!hasFooter) {
+            void (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.dispatch)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.store).insertBlock(linksParagraphBlock, undefined, contentBlockId);
+          } else {
+            void (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.dispatch)(_wordpress_core_data__WEBPACK_IMPORTED_MODULE_5__.store).editEntityRecord('postType', 'wp_template', postTemplateId, {
+              content: `
+                      ${editedTemplateContent}
+                      <!-- wp:paragraph {"align":"center","fontSize":"small"} -->
+                      ${contentLink}
+                      <!-- /wp:paragraph -->
+                    `
+            });
+          }
+        }
+      }]
+    }];
+  }, [contentBlockId, hasFooter, contentLink, postTemplateId, editedTemplateContent]);
+  const validateContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useCallback)(() => {
     let isValid = true;
     rules.forEach(({
       id,
@@ -9405,12 +9448,12 @@ const useContentValidation = () => {
   }, [content, templateContent, addValidationNotice, removeValidationNotice, hasValidationNotice, rules]);
 
   // Subscribe to updates so notices can be dismissed once resolved.
-  (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_1__.subscribe)(() => {
+  (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.subscribe)(() => {
     if (!hasValidationNotice()) {
       return;
     }
     validateContent();
-  }, _wordpress_core_data__WEBPACK_IMPORTED_MODULE_2__.store);
+  }, _store__WEBPACK_IMPORTED_MODULE_7__.storeName);
   return {
     isInvalid: hasValidationNotice(),
     validateContent
