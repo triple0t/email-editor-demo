@@ -105,7 +105,9 @@ class ComposerStaticInit3ec3d68813951a5994b8185678e256db
         'MailPoet\\EmailEditor\\Engine\\Send_Preview_Email' => __DIR__ . '/../..' . '/src/Engine/class-send-preview-email.php',
         'MailPoet\\EmailEditor\\Engine\\Settings_Controller' => __DIR__ . '/../..' . '/src/Engine/class-settings-controller.php',
         'MailPoet\\EmailEditor\\Engine\\Settings_Controller_Test' => __DIR__ . '/../..' . '/tests/unit/Engine/Settings_Controller_Test.php',
+        'MailPoet\\EmailEditor\\Engine\\Templates\\Template' => __DIR__ . '/../..' . '/src/Engine/Templates/class-template.php',
         'MailPoet\\EmailEditor\\Engine\\Templates\\Templates' => __DIR__ . '/../..' . '/src/Engine/Templates/class-templates.php',
+        'MailPoet\\EmailEditor\\Engine\\Templates\\Templates_Registry' => __DIR__ . '/../..' . '/src/Engine/Templates/class-templates-registry.php',
         'MailPoet\\EmailEditor\\Engine\\Theme_Controller' => __DIR__ . '/../..' . '/src/Engine/class-theme-controller.php',
         'MailPoet\\EmailEditor\\Engine\\User_Theme' => __DIR__ . '/../..' . '/src/Engine/class-user-theme.php',
         'MailPoet\\EmailEditor\\Exception' => __DIR__ . '/../..' . '/src/exceptions.php',
@@ -147,8 +149,10 @@ class ComposerStaticInit3ec3d68813951a5994b8185678e256db
         'PersonalizationTagsRegistryTest' => __DIR__ . '/../..' . '/tests/unit/Engine/PersonalizationTags/Personalization_Tags_Registry_Test.php',
         'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
+        'TemplatesRegistryTest' => __DIR__ . '/../..' . '/tests/unit/Engine/Templates/Template_Registry_Test.php',
         'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
         'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
+        'WP_Block_Templates_Registry' => __DIR__ . '/../..' . '/tests/unit/_stubs.php',
         'WP_Theme_JSON' => __DIR__ . '/../..' . '/tests/unit/_stubs.php',
     );
 

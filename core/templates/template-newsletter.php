@@ -4,15 +4,15 @@ namespace EmailEditorDemo\Templates;
 
 class Newsletter {
   public function getSlug(): string {
-    return 'newsletter';
+    return 'demonewsletter';
   }
 
   public function getTitle(): string {
-    return __('Newsletter', 'email-editor-demo');
+    return __('DemoNewsletter', 'email-editor-demo');
   }
 
   public function getDescription(): string {
-    return __('Newsletter', 'email-editor-demo');
+    return __('DemoNewsletter', 'email-editor-demo');
   }
 
   public function getContent(): string {

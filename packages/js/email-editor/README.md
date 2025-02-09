@@ -4,8 +4,6 @@ This folder contains the code for the MailPoet Email Editor JS Package.
 We aim to extract the package as an independent library, so it can be used in other projects.
 As we are still in an exploration phase, we keep it together with the MailPoet codebase.
 
-You can try the email editor in [the WordPress Playground](https://playground.wordpress.net/?mode=seamless#%7B%22preferredVersions%22:%7B%22php%22:%228.2%22,%22wp%22:%22latest%22%7D,%22phpExtensionBundles%22:%5B%22kitchen-sink%22%5D,%22features%22:%7B%7D,%22landingPage%22:%22/wp-admin/admin.php?page=mailpoet-newsletters%22,%22steps%22:%5B%7B%22step%22:%22login%22,%22username%22:%22admin%22,%22password%22:%22password%22%7D,%7B%22step%22:%22installPlugin%22,%22pluginData%22:%7B%22resource%22:%22url%22,%22url%22:%22https://account.mailpoet.com/playground/plugin-proxy/branch:trunk%22%7D%7D,%7B%22step%22:%22mkdir%22,%22path%22:%22wordpress/wp-content/mu-plugins%22%7D,%7B%22step%22:%22writeFile%22,%22path%22:%22wordpress/wp-content/mu-plugins/addFilter-2.php%22,%22data%22:%22%3C?php%20%5Cnuse%20MailPoet%5C%5CDI%5C%5CContainerWrapper;%5Cnuse%20MailPoet%5C%5CFeatures%5C%5CFeatureFlagsRepository;%5Cnuse%20MailPoet%5C%5CFeatures%5C%5CFeaturesController;%5Cnadd_filter('mailpoet_skip_welcome_wizard',%20'__return_true');%22%7D%5D%7D).
-
 You can locate the PHP package here `packages/php/email-editor`
 
 ## Workflow Commands
@@ -82,27 +80,3 @@ If your WordPress installation does not use the Gutenberg plugin or does not inc
 | Orange.fr      | iOS/Android           | Latest               | ?                | -/0.07              | No                    |                                                                                                                                                                                                          |
 | Thunderbird    | Windows, macOS, Linux | Latest               | Gecko            | -/0.61              | Yes                   | It uses bundled rendering engine so it should be enough to test on one platform                                                                                                                          |
 | Windows Mail   | Windows               | 10, 11               | Word             | -/-                 | Yes                   | Default Client in Windows. Market share should be over 6% in desktop clients                                                                                                                             |
-
-## Actions and Filters
-
-These actions and filters are currently **Work-in-progress**.
-We may add, update and delete any of them.
-
-**Please use with caution**.
-
-### Actions
-
-| Name                           | Argument           | Description         |
-|--------------------------------|--------------------|---------------------|
-| `mailpoet_email_editor_events` | `EventData.detail` | Email editor events |
-
-### Filters
-
-| Name                                             | Argument                  | Return                               | Description                                                                                                         |
-|--------------------------------------------------|---------------------------|--------------------------------------|---------------------------------------------------------------------------------------------------------------------|
-| `mailpoet_email_editor_events_tracking_enabled`  | `boolean` (false-default) | `boolean`                            | Used to enable the email editor events tracking and collection                                                      |
-| `mailpoet_email_editor_wrap_editor_component`    | `JSX.Element` Editor      | `JSX.Element` Editor                 | The main editor component. Custom component can wrap the editor and provide additional functionality                |
-| `mailpoet_email_editor_send_button_label`        | `string` 'Send'           | `string`  'Send' (default)           | Email editor send button label. The `Send` text can be updated using this filter                                    |
-| `mailpoet_email_editor_send_action_callback`     | `function` sendAction     | `function` sendAction                | Action to perform when the Send button is clicked                                                                   |
-| `mailpoet_email_editor_content_validation_rules` | `array` rules             | `EmailContentValidationRule[]` rules | Email editor content validation rules. The validation is done on `send btton` click and revalidated on `save draft` |
-

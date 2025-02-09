@@ -2,6 +2,8 @@
 
 namespace EmailEditorDemo\Templates;
 
+use MailPoet\EmailEditor\Engine\Templates\Template;
+use MailPoet\EmailEditor\Engine\Templates\Templates_Registry;
 use EmailEditorDemo\EmailEditorDemoIntegration;
 
 class TemplatesController {
@@ -13,36 +15,31 @@ class TemplatesController {
 	 * This prevents the templates from showing up in the email editor template selector.
 	 * @var string
 	 */
-  private string $templatePrefix = 'mailpoet'; // TODO: We need to add upstream support for this.
-//   private string $templatePrefix = 'emaileditordemo';
+//   private string $templatePrefix = 'mailpoet'; // TODO: We need to add upstream support for this.
+  private string $templatePrefix = 'emaileditordemo';
 
 
   public function initialize() {
-   add_action('mailpoet_email_editor_register_templates', [$this, 'registerTemplates'], 10, 0);
+   add_filter('mailpoet_email_editor_register_templates', [$this, 'registerTemplates']);
   }
 
-  public function registerTemplates() {
+  public function registerTemplates(Templates_Registry $templatesRegistry) {
 	$templates = [];
     $templates[] = new Newsletter();
     $templates[] = new SimpleLight();
 
     foreach ($templates as $template) {
-	  $templateName = $this->templatePrefix . '//' . $template->getSlug();
-
-	  if (\WP_Block_Templates_Registry::get_instance()->is_registered($templateName)) {
-		// skip registration if the template was already registered.
-		continue;
-	  }
-
-	  register_block_template(
-		$templateName,
-		[
-		  'title' => $template->getTitle(),
-		  'description' => $template->getDescription(),
-		  'content' => $template->getContent(),
-		  'post_types' => [EmailEditorDemoIntegration::MAILPOET_EMAIL_POST_TYPE],
-		]
+	  $theTemplate = new Template(
+		$this->templatePrefix,
+		$template->getSlug(),
+		$template->getTitle(),
+		$template->getDescription(),
+		$template->getContent(),
+		[EmailEditorDemoIntegration::MAILPOET_EMAIL_POST_TYPE]
 	  );
+	  $templatesRegistry->register($theTemplate);
     }
+
+	return $templatesRegistry;
   }
 }

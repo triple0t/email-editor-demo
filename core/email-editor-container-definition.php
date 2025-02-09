@@ -30,6 +30,7 @@ use MailPoet\EmailEditor\Engine\Renderer\Renderer;
 use MailPoet\EmailEditor\Engine\Send_Preview_Email;
 use MailPoet\EmailEditor\Engine\Settings_Controller;
 use MailPoet\EmailEditor\Engine\Templates\Templates;
+use MailPoet\EmailEditor\Engine\Templates\Templates_Registry;
 use MailPoet\EmailEditor\Engine\Theme_Controller;
 use MailPoet\EmailEditor\Engine\User_Theme;
 use MailPoet\EmailEditor\Integrations\Core\Initializer;
@@ -185,9 +186,15 @@ abstract class MailPoetEmailEditorContainerDefinition { // phpcs:ignore
 			}
 		);
 		$container->set(
-			Templates::class,
+			Templates_Registry::class,
 			function () {
-				return new Templates();
+				return new Templates_Registry();
+			}
+		);
+		$container->set(
+			Templates::class,
+			function ( $container ) {
+				return new Templates( $container->get( Templates_Registry::class ) );
 			}
 		);
 		$container->set(
