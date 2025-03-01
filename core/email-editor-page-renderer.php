@@ -52,14 +52,14 @@ class EmailEditorPageRenderer
       $assetsParams = require EMAIL_EDITOR_DEMO_PATH . '/packages/js/email-editor/build/index.asset.php';
 
       wp_enqueue_script(
-        'mailpoet_email_editor',
+        'email_editor_demo',
         EMAIL_EDITOR_DEMO_URL . '/packages/js/email-editor/build/index.js',
         $assetsParams['dependencies'],
         $assetsParams['version'],
         true
       );
       wp_enqueue_style(
-        'mailpoet_email_editor',
+        'email_editor_demo',
         EMAIL_EDITOR_DEMO_URL . '/packages/js/email-editor/build/index.css',
         [],
         $assetsParams['version']
@@ -70,14 +70,14 @@ class EmailEditorPageRenderer
       $assetsParams = require EMAIL_EDITOR_DEMO_PATH . "/build/{$fileName}.asset.php";
 
       wp_enqueue_script(
-        'mailpoet_email_editor',
+        'email_editor_demo',
         EMAIL_EDITOR_DEMO_URL . "/build/{$fileName}.js",
         $assetsParams['dependencies'],
         $assetsParams['version'],
         true
       );
       wp_enqueue_style(
-        'mailpoet_email_editor',
+        'email_editor_demo',
         EMAIL_EDITOR_DEMO_URL . "/build/{$fileName}.css",
         [],
         $assetsParams['version']
@@ -86,7 +86,7 @@ class EmailEditorPageRenderer
 
     $currentUserEmail = wp_get_current_user()->user_email;
     wp_localize_script(
-      'mailpoet_email_editor',
+      'email_editor_demo',
       'MailPoetEmailEditor',
       [
         'current_post_type' => esc_js($currentPostType),
