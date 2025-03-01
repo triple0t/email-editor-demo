@@ -8,7 +8,6 @@ class ComposerStaticInit3ec3d68813951a5994b8185678e256db
 {
     public static $files = array (
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
-        'ba6018d54244eae1ca1c3c65edf949d6' => __DIR__ . '/../..' . '/src/exceptions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
