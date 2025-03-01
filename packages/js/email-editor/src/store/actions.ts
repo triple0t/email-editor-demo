@@ -134,29 +134,6 @@ export function* saveEditedEmail() {
 	} );
 }
 
-export function* updateEmailMailPoetProperty( name: string, value: string ) {
-	const postId = select( storeName ).getEmailPostId();
-	// There can be a better way how to get the edited post data
-	const editedPost = select( coreDataStore ).getEditedEntityRecord(
-		'postType',
-		editorCurrentPostType,
-		postId
-	);
-	// @ts-expect-error Property 'mailpoet_data' does not exist on type 'Updatable<Attachment<any>>'.
-	const mailpoetData = editedPost?.mailpoet_data || {};
-	yield dispatch( coreDataStore ).editEntityRecord(
-		'postType',
-		editorCurrentPostType,
-		postId,
-		{
-			mailpoet_data: {
-				...mailpoetData,
-				[ name ]: value,
-			},
-		}
-	);
-}
-
 export const setTemplateToPost =
 	( templateSlug ) =>
 	async ( { registry } ) => {
@@ -168,10 +145,7 @@ export const setTemplateToPost =
 			} );
 	};
 
-export function* requestSendingNewsletterPreview(
-	newsletterId: number,
-	email: string
-) {
+export function* requestSendingNewsletterPreview( email: string ) {
 	// If preview is already sending do nothing
 	const previewState = select( storeName ).getPreviewState();
 	if ( previewState.isSendingPreviewEmail ) {
@@ -192,7 +166,6 @@ export function* requestSendingNewsletterPreview(
 			path: '/mailpoet-email-editor/v1/send_preview_email',
 			method: 'POST',
 			data: {
-				newsletterId,
 				email,
 				postId,
 			},
@@ -213,6 +186,9 @@ export function* requestSendingNewsletterPreview(
 			state: {
 				sendingPreviewStatus: SendingPreviewStatus.ERROR,
 				isSendingPreviewEmail: false,
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				errorMessage: JSON.stringify( errorResponse?.error ),
 			},
 		};
 	}
