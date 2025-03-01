@@ -4670,7 +4670,7 @@ function SaveEmailButton() {
     isSaving: select(_store__WEBPACK_IMPORTED_MODULE_4__.storeName).isSaving()
   }), []);
   const isSaved = !isEmpty && !isSaving && !hasEdits;
-  const isDisabled = isEmpty || isSaving || isSaved;
+  const isDisabled = !hasEdits && (isEmpty || isSaving || isSaved);
   let label = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Save Draft', 'mailpoet');
   if (isSaved) {
     label = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Saved', 'mailpoet');
