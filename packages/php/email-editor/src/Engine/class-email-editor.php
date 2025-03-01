@@ -89,7 +89,7 @@ class Email_Editor {
 		$this->register_block_patterns();
 		$this->register_email_post_types();
 		$this->register_block_templates();
-		$this->register_email_post_sent_status();
+		$this->register_email_post_send_status();
 		$this->register_personalization_tags();
 		$is_editor_page = apply_filters( 'mailpoet_is_email_editor_page', false );
 		if ( $is_editor_page ) {
@@ -183,19 +183,16 @@ class Email_Editor {
 	 *
 	 * @return void
 	 */
-	private function register_email_post_sent_status(): void {
-		$default_args = array(
-			'public'                    => false,
-			'exclude_from_search'       => true,
-			'internal'                  => true, // for now, we hide it, if we use the status in the listings we may flip this and following values.
-			'show_in_admin_all_list'    => false,
-			'show_in_admin_status_list' => false,
-			'private'                   => true, // required by the preview in new tab feature for sent post (newsletter). Posts are only visible to site admins and editors.
-		);
-		$args         = apply_filters( 'mailpoet_email_editor_post_sent_status_args', $default_args );
+	private function register_email_post_send_status(): void {
 		register_post_status(
 			'sent',
-			$args
+			array(
+				'public'                    => false,
+				'exclude_from_search'       => true,
+				'internal'                  => true, // for now, we hide it, if we use the status in the listings we may flip this and following values.
+				'show_in_admin_all_list'    => false,
+				'show_in_admin_status_list' => false,
+			)
 		);
 	}
 
