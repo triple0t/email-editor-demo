@@ -202,18 +202,12 @@ export type State = {
 		isModalOpened: boolean;
 		isSendingPreviewEmail: boolean;
 		sendingPreviewStatus: SendingPreviewStatus | null;
+		errorMessage?: string;
 	};
 	personalizationTags: {
 		list: PersonalizationTag[];
 		isFetching: boolean;
 	};
-};
-
-export type MailPoetEmailData = {
-	id: number;
-	subject: string;
-	preheader: string;
-	preview_url: string;
 };
 
 export type EmailTemplate = {
@@ -267,5 +261,16 @@ export type MailPoetEmailPostContentExtended = {
 
 export type EmailEditorPostType = Omit< Post, 'type' > & {
 	type: string;
-	mailpoet_data?: MailPoetEmailPostContentExtended;
+};
+
+export type EmailContentValidationAction = {
+	label: string;
+	onClick: () => void;
+};
+
+export type EmailContentValidationRule = {
+	id: string;
+	test: ( emailContent: string ) => boolean;
+	message: string;
+	actions: EmailContentValidationAction[];
 };

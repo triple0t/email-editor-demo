@@ -25,7 +25,7 @@ export function SaveEmailButton() {
 	);
 
 	const isSaved = ! isEmpty && ! isSaving && ! hasEdits;
-	const isDisabled = isEmpty || isSaving || isSaved;
+	const isDisabled = ! hasEdits && ( isEmpty || isSaving || isSaved );
 
 	let label = __( 'Save Draft', 'mailpoet' );
 	if ( isSaved ) {

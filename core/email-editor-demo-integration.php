@@ -14,20 +14,16 @@ class EmailEditorDemoIntegration
 
   private EmailEditorPageRenderer $editorPageRenderer;
 
-  private EmailEditorDemoApiController $emailApiController;
-
 	private PatternsController $patternsController;
 
 	private TemplatesController $templatesController;
 
   public function __construct(
     EmailEditorPageRenderer $editorPageRenderer,
-    EmailEditorDemoApiController $emailApiController,
 		PatternsController $patternsController,
     TemplatesController $templatesController,
   ) {
     $this->editorPageRenderer = $editorPageRenderer;
-    $this->emailApiController = $emailApiController;
 		$this->patternsController = $patternsController;
     $this->templatesController = $templatesController;
   }
@@ -41,7 +37,6 @@ class EmailEditorDemoIntegration
 		$this->patternsController->registerPatterns();
 		// register templates
     $this->templatesController->initialize();
-    $this->extendEmailPostApi();
 		$this->registerPersonalizationTags();
   }
 
@@ -93,14 +88,6 @@ class EmailEditorDemoIntegration
       return true;
     }
     return $replace;
-  }
-
-  public function extendEmailPostApi() {
-    register_rest_field(self::MAILPOET_EMAIL_POST_TYPE, 'mailpoet_data', [
-      'get_callback' => [$this->emailApiController, 'getEmailData'],
-      'update_callback' => [$this->emailApiController, 'saveEmailData'],
-      'schema' => $this->emailApiController->getEmailDataSchema(),
-    ]);
   }
 
 	public function registerPersonalizationTags() {

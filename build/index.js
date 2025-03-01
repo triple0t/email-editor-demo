@@ -4453,8 +4453,7 @@ function MoreMenu() {
   }), []);
   const [status, setStatus] = (0,_wordpress_core_data__WEBPACK_IMPORTED_MODULE_4__.useEntityProp)('postType', _store__WEBPACK_IMPORTED_MODULE_8__.editorCurrentPostType, 'status');
   const {
-    saveEditedEmail,
-    updateEmailMailPoetProperty
+    saveEditedEmail
   } = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_7__.useDispatch)(_store__WEBPACK_IMPORTED_MODULE_8__.storeName);
   const goToListings = () => {
     window.location.href = urls.listings;
@@ -4501,7 +4500,6 @@ function MoreMenu() {
   })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.MenuGroup, null, status === 'trash' ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.MenuItem, {
     onClick: async () => {
       await setStatus('draft');
-      await updateEmailMailPoetProperty('deleted_at', '');
       await saveEditedEmail();
       (0,_events__WEBPACK_IMPORTED_MODULE_10__.recordEvent)('header_more_menu_restore_from_trash_button_clicked');
     }
@@ -4672,7 +4670,7 @@ function SaveEmailButton() {
     isSaving: select(_store__WEBPACK_IMPORTED_MODULE_4__.storeName).isSaving()
   }), []);
   const isSaved = !isEmpty && !isSaving && !hasEdits;
-  const isDisabled = isEmpty || isSaving || isSaved;
+  const isDisabled = !hasEdits && (isEmpty || isSaving || isSaved);
   let label = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Save Draft', 'mailpoet');
   if (isSaved) {
     label = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Saved', 'mailpoet');
@@ -4774,7 +4772,8 @@ function SendButton({
         action();
       }
     },
-    disabled: isDisabled
+    disabled: isDisabled,
+    "data-automation-id": "email_editor_send_button"
   }, label);
 }
 
@@ -5996,7 +5995,7 @@ __webpack_require__.r(__webpack_exports__);
 
 function getChildElement(rootElement) {
   let currentElement = rootElement;
-  while (currentElement && currentElement.children.length > 0) {
+  while (currentElement && currentElement?.children?.length > 0) {
     // Traverse into the first child element
     currentElement = currentElement.children[0];
   }
@@ -6145,19 +6144,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _wordpress_core_data__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/core-data */ "@wordpress/core-data");
-/* harmony import */ var _wordpress_core_data__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_core_data__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _wordpress_rich_text__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/rich-text */ "@wordpress/rich-text");
-/* harmony import */ var _wordpress_rich_text__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_rich_text__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
-/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _personalization_tags_modal__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./personalization-tags-modal */ "./src/components/personalization-tags/personalization-tags-modal.tsx");
-/* harmony import */ var _rich_text_utils__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./rich-text-utils */ "./src/components/personalization-tags/rich-text-utils.ts");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../store */ "./src/store/constants.ts");
-/* harmony import */ var _personalization_tags_popover__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./personalization-tags-popover */ "./src/components/personalization-tags/personalization-tags-popover.tsx");
-/* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../events */ "./src/events/event-pipeline.ts");
+/* harmony import */ var _wordpress_rich_text__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/rich-text */ "@wordpress/rich-text");
+/* harmony import */ var _wordpress_rich_text__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_rich_text__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _personalization_tags_modal__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./personalization-tags-modal */ "./src/components/personalization-tags/personalization-tags-modal.tsx");
+/* harmony import */ var _rich_text_utils__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./rich-text-utils */ "./src/components/personalization-tags/rich-text-utils.ts");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../store */ "./src/store/constants.ts");
+/* harmony import */ var _personalization_tags_popover__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./personalization-tags-popover */ "./src/components/personalization-tags/personalization-tags-popover.tsx");
+/* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../events */ "./src/events/event-pipeline.ts");
 
 /**
  * External dependencies
@@ -6183,104 +6180,97 @@ function RichTextWithButton({
   labelSuffix,
   help,
   placeholder,
-  attributeName
+  attributeName,
+  attributeValue,
+  updateProperty = () => {}
 }) {
-  var _mailpoetEmailData$at6;
-  const [mailpoetEmailData] = (0,_wordpress_core_data__WEBPACK_IMPORTED_MODULE_4__.useEntityProp)('postType', _store__WEBPACK_IMPORTED_MODULE_8__.editorCurrentPostType, 'mailpoet_data');
-  const {
-    updateEmailMailPoetProperty
-  } = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.useDispatch)(_store__WEBPACK_IMPORTED_MODULE_8__.storeName);
   const [selectionRange, setSelectionRange] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useState)(null);
   const [isModalOpened, setIsModalOpened] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useState)(false);
-  const list = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.useSelect)(select => select(_store__WEBPACK_IMPORTED_MODULE_8__.storeName).getPersonalizationTagsList(), []);
+  const list = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.useSelect)(select => select(_store__WEBPACK_IMPORTED_MODULE_7__.storeName).getPersonalizationTagsList(), []);
   const richTextRef = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useRef)(null);
   const handleInsertPersonalizationTag = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useCallback)((tagName, currentValue, currentSelectionRange) => {
     var _currentSelectionRang, _currentSelectionRang2;
     // Ensure selection range is within bounds
     const start = (_currentSelectionRang = currentSelectionRange?.start) !== null && _currentSelectionRang !== void 0 ? _currentSelectionRang : currentValue.length;
     const end = (_currentSelectionRang2 = currentSelectionRange?.end) !== null && _currentSelectionRang2 !== void 0 ? _currentSelectionRang2 : currentValue.length;
-    let richTextValue = (0,_wordpress_rich_text__WEBPACK_IMPORTED_MODULE_5__.create)({
+    let richTextValue = (0,_wordpress_rich_text__WEBPACK_IMPORTED_MODULE_4__.create)({
       html: currentValue
     });
-    richTextValue = (0,_wordpress_rich_text__WEBPACK_IMPORTED_MODULE_5__.insert)(richTextValue, (0,_wordpress_rich_text__WEBPACK_IMPORTED_MODULE_5__.create)({
+    richTextValue = (0,_wordpress_rich_text__WEBPACK_IMPORTED_MODULE_4__.insert)(richTextValue, (0,_wordpress_rich_text__WEBPACK_IMPORTED_MODULE_4__.create)({
       html: `<!--${tagName}-->`
     }), start, end);
-    const updatedValue = (0,_wordpress_rich_text__WEBPACK_IMPORTED_MODULE_5__.toHTMLString)({
+    const updatedValue = (0,_wordpress_rich_text__WEBPACK_IMPORTED_MODULE_4__.toHTMLString)({
       value: richTextValue
     });
 
     // Update the corresponding property
-    updateEmailMailPoetProperty(attributeName, updatedValue);
+    updateProperty(attributeName, updatedValue);
     setSelectionRange(null);
-  }, [attributeName, updateEmailMailPoetProperty]);
+  }, [attributeName, updateProperty]);
   const finalLabel = (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, label), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
     className: "mailpoet-settings-panel__personalization-tags-button",
     icon: "shortcode",
-    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Personalization Tags', 'mailpoet'),
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)('Personalization Tags', 'mailpoet'),
     onClick: () => {
       setIsModalOpened(true);
-      (0,_events__WEBPACK_IMPORTED_MODULE_9__.recordEvent)('rich_text_with_button_personalization_tags_shortcode_icon_clicked', {
+      (0,_events__WEBPACK_IMPORTED_MODULE_8__.recordEvent)('rich_text_with_button_personalization_tags_shortcode_icon_clicked', {
         attributeName,
         label
       });
     }
   }), labelSuffix);
-  if (!mailpoetEmailData) {
+  if (!attributeName) {
     return null;
   }
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.BaseControl, {
-    id: `mailpoet-settings-panel__${attributeName}`,
+    id: "" // See https://github.com/mailpoet/mailpoet/pull/6089#discussion_r1952126850 to understand why the ID is empty
+    ,
     label: finalLabel,
     className: `mailpoet-settings-panel__${attributeName}-text`,
     help: help,
     __nextHasNoMarginBottom: true // To avoid warning about deprecation in console
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_personalization_tags_modal__WEBPACK_IMPORTED_MODULE_10__.PersonalizationTagsModal, {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_personalization_tags_modal__WEBPACK_IMPORTED_MODULE_9__.PersonalizationTagsModal, {
     isOpened: isModalOpened,
     onInsert: value => {
-      var _mailpoetEmailData$at;
-      handleInsertPersonalizationTag(value, (_mailpoetEmailData$at = mailpoetEmailData[attributeName]) !== null && _mailpoetEmailData$at !== void 0 ? _mailpoetEmailData$at : '', selectionRange);
+      handleInsertPersonalizationTag(value, attributeValue !== null && attributeValue !== void 0 ? attributeValue : '', selectionRange);
       setIsModalOpened(false);
-      (0,_events__WEBPACK_IMPORTED_MODULE_9__.recordEvent)('rich_text_with_button_personalization_tags_inserted', {
+      (0,_events__WEBPACK_IMPORTED_MODULE_8__.recordEvent)('rich_text_with_button_personalization_tags_inserted', {
         attributeName,
         value
       });
     },
     closeCallback: () => setIsModalOpened(false),
     openedBy: "RichTextWithButton-BaseControl"
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_personalization_tags_popover__WEBPACK_IMPORTED_MODULE_11__.PersonalizationTagsPopover, {
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_personalization_tags_popover__WEBPACK_IMPORTED_MODULE_10__.PersonalizationTagsPopover, {
     contentRef: richTextRef,
     onUpdate: (originalTag, updatedTag) => {
-      var _mailpoetEmailData$at2;
-      const currentValue = (_mailpoetEmailData$at2 = mailpoetEmailData[attributeName]) !== null && _mailpoetEmailData$at2 !== void 0 ? _mailpoetEmailData$at2 : '';
+      const currentValue = attributeValue !== null && attributeValue !== void 0 ? attributeValue : '';
       // When we update the tag, we need to add brackets to the tag, because the popover removes them
       const updatedContent = currentValue.replace(`<!--[${originalTag}]-->`, `<!--[${updatedTag}]-->`);
-      updateEmailMailPoetProperty(attributeName, updatedContent);
+      updateProperty(attributeName, updatedContent);
     }
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_6__.RichText, {
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_5__.RichText, {
     ref: richTextRef,
     className: "mailpoet-settings-panel__richtext",
     placeholder: placeholder,
     onFocus: () => {
-      var _mailpoetEmailData$at3;
-      setSelectionRange((0,_rich_text_utils__WEBPACK_IMPORTED_MODULE_12__.getCursorPosition)(richTextRef, (_mailpoetEmailData$at3 = mailpoetEmailData[attributeName]) !== null && _mailpoetEmailData$at3 !== void 0 ? _mailpoetEmailData$at3 : ''));
+      setSelectionRange((0,_rich_text_utils__WEBPACK_IMPORTED_MODULE_11__.getCursorPosition)(richTextRef, attributeValue !== null && attributeValue !== void 0 ? attributeValue : ''));
     },
     onKeyUp: () => {
-      var _mailpoetEmailData$at4;
-      setSelectionRange((0,_rich_text_utils__WEBPACK_IMPORTED_MODULE_12__.getCursorPosition)(richTextRef, (_mailpoetEmailData$at4 = mailpoetEmailData[attributeName]) !== null && _mailpoetEmailData$at4 !== void 0 ? _mailpoetEmailData$at4 : ''));
+      setSelectionRange((0,_rich_text_utils__WEBPACK_IMPORTED_MODULE_11__.getCursorPosition)(richTextRef, attributeValue !== null && attributeValue !== void 0 ? attributeValue : ''));
     },
     onClick: () => {
-      var _mailpoetEmailData$at5;
-      setSelectionRange((0,_rich_text_utils__WEBPACK_IMPORTED_MODULE_12__.getCursorPosition)(richTextRef, (_mailpoetEmailData$at5 = mailpoetEmailData[attributeName]) !== null && _mailpoetEmailData$at5 !== void 0 ? _mailpoetEmailData$at5 : ''));
+      setSelectionRange((0,_rich_text_utils__WEBPACK_IMPORTED_MODULE_11__.getCursorPosition)(richTextRef, attributeValue !== null && attributeValue !== void 0 ? attributeValue : ''));
     },
     onChange: value => {
       var _value;
-      value = (0,_rich_text_utils__WEBPACK_IMPORTED_MODULE_12__.replacePersonalizationTagsWithHTMLComments)((_value = value) !== null && _value !== void 0 ? _value : '', list);
-      updateEmailMailPoetProperty(attributeName, value);
-      (0,_events__WEBPACK_IMPORTED_MODULE_9__.recordEventOnce)('rich_text_with_button_input_field_updated', {
+      value = (0,_rich_text_utils__WEBPACK_IMPORTED_MODULE_11__.replacePersonalizationTagsWithHTMLComments)((_value = value) !== null && _value !== void 0 ? _value : '', list);
+      updateProperty(attributeName, value);
+      (0,_events__WEBPACK_IMPORTED_MODULE_8__.recordEventOnce)('rich_text_with_button_input_field_updated', {
         attributeName
       });
     },
-    value: (_mailpoetEmailData$at6 = mailpoetEmailData[attributeName]) !== null && _mailpoetEmailData$at6 !== void 0 ? _mailpoetEmailData$at6 : '',
+    value: attributeValue !== null && attributeValue !== void 0 ? attributeValue : '',
     "data-automation-id": `email_${attributeName}`
   }));
 }
@@ -6384,7 +6374,10 @@ function PreviewDropdown() {
     textContent: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Preview in new tab', 'mailpoet'), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_icons__WEBPACK_IMPORTED_MODULE_10__["default"], {
       icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_11__["default"]
     })),
-    onPreview: () => (0,_events__WEBPACK_IMPORTED_MODULE_8__.recordEvent)('header_preview_dropdown_preview_in_new_tab_selected')
+    onPreview: () => {
+      (0,_events__WEBPACK_IMPORTED_MODULE_8__.recordEvent)('header_preview_dropdown_preview_in_new_tab_selected');
+      onClose();
+    }
   }))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_send_preview_email__WEBPACK_IMPORTED_MODULE_12__.SendPreviewEmail, null));
 }
 
@@ -6417,8 +6410,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_keycodes__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_keycodes__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _wordpress_url__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/url */ "@wordpress/url");
 /* harmony import */ var _wordpress_url__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_url__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _wordpress_core_data__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/core-data */ "@wordpress/core-data");
-/* harmony import */ var _wordpress_core_data__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_core_data__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _wordpress_hooks__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/hooks */ "@wordpress/hooks");
+/* harmony import */ var _wordpress_hooks__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_hooks__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../store */ "./src/store/constants.ts");
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../store */ "./src/store/types.ts");
 /* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../events */ "./src/events/event-pipeline.ts");
@@ -6440,6 +6433,7 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
+const sendingMethodConfigurationLink = (0,_wordpress_hooks__WEBPACK_IMPORTED_MODULE_7__.applyFilters)('mailpoet_email_editor_check_sending_method_configuration_link', 'admin.php?page=mailpoet-settings#mta');
 function RawSendPreviewEmail() {
   const sendToRef = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_4__.useRef)(null);
   const {
@@ -6451,11 +6445,11 @@ function RawSendPreviewEmail() {
     toEmail: previewToEmail,
     isSendingPreviewEmail,
     sendingPreviewStatus,
-    isModalOpened
+    isModalOpened,
+    errorMessage
   } = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.useSelect)(select => select(_store__WEBPACK_IMPORTED_MODULE_8__.storeName).getPreviewState(), []);
-  const [mailpoetEmailData] = (0,_wordpress_core_data__WEBPACK_IMPORTED_MODULE_7__.useEntityProp)('postType', _store__WEBPACK_IMPORTED_MODULE_8__.editorCurrentPostType, 'mailpoet_data');
   const handleSendPreviewEmail = () => {
-    void requestSendingNewsletterPreview(mailpoetEmailData.id, previewToEmail);
+    void requestSendingNewsletterPreview(previewToEmail);
   };
   const closeCallback = () => {
     (0,_events__WEBPACK_IMPORTED_MODULE_9__.recordEvent)('send_preview_email_modal_closed');
@@ -6479,11 +6473,13 @@ function RawSendPreviewEmail() {
     focusOnMount: false
   }, sendingPreviewStatus === _store__WEBPACK_IMPORTED_MODULE_10__.SendingPreviewStatus.ERROR ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "mailpoet-send-preview-modal-notice-error"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Sorry, we were unable to send this email.', 'mailpoet'), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_4__.createInterpolateElement)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Please check your <link>sending method configuration</link> with your hosting provider.', 'mailpoet'), {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Sorry, we were unable to send this email.', 'mailpoet')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, errorMessage && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.sprintf)(
+  // translators: %s is an error message.
+  (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Error: %s', 'mailpoet'), errorMessage)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", null, sendingMethodConfigurationLink && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_4__.createInterpolateElement)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Please check your <link>sending method configuration</link> with your hosting provider.', 'mailpoet'), {
     link:
     // eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label
     (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      href: "admin.php?page=mailpoet-settings#mta",
+      href: sendingMethodConfigurationLink,
       target: "_blank",
       rel: "noopener noreferrer",
       onClick: () => (0,_events__WEBPACK_IMPORTED_MODULE_9__.recordEvent)('send_preview_email_modal_check_sending_method_configuration_link_clicked')
@@ -6492,7 +6488,7 @@ function RawSendPreviewEmail() {
     link:
     // eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label
     (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      href: new URL('free-plan', 'https://www.mailpoet.com/').toString(),
+      href: `https://account.mailpoet.com/?s=1&g=1&utm_source=mailpoet_email_editor&utm_medium=plugin&utm_source_platform=${_store__WEBPACK_IMPORTED_MODULE_8__.editorCurrentPostType}`,
       key: "sign-up-for-free",
       target: "_blank",
       rel: "noopener noreferrer",
@@ -6643,23 +6639,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _wordpress_core_data__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/core-data */ "@wordpress/core-data");
-/* harmony import */ var _wordpress_core_data__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_core_data__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
-/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../store */ "./src/store/constants.ts");
-/* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../events */ "./src/events/event-pipeline.ts");
-/* harmony import */ var _personalization_tags_rich_text_with_button__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../personalization-tags/rich-text-with-button */ "./src/components/personalization-tags/rich-text-with-button.tsx");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_hooks__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/hooks */ "@wordpress/hooks");
+/* harmony import */ var _wordpress_hooks__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_hooks__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../events */ "./src/events/event-pipeline.ts");
+/* harmony import */ var _personalization_tags_rich_text_with_button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../personalization-tags/rich-text-with-button */ "./src/components/personalization-tags/rich-text-with-button.tsx");
 
 /**
  * External dependencies
  */
-
-
 
 
 
@@ -6669,69 +6658,15 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
-
-const previewTextMaxLength = 150;
-const previewTextRecommendedLength = 80;
+const SidebarExtensionComponent = (0,_wordpress_hooks__WEBPACK_IMPORTED_MODULE_3__.applyFilters)('mailpoet_email_editor_setting_sidebar_extension_component', _personalization_tags_rich_text_with_button__WEBPACK_IMPORTED_MODULE_4__.RichTextWithButton);
 function DetailsPanel() {
-  var _mailpoetEmailData$pr;
-  const [mailpoetEmailData] = (0,_wordpress_core_data__WEBPACK_IMPORTED_MODULE_2__.useEntityProp)('postType', _store__WEBPACK_IMPORTED_MODULE_6__.editorCurrentPostType, 'mailpoet_data');
-  const subjectHelp = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_4__.createInterpolateElement)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Use personalization tags to personalize your email, or learn more about <bestPracticeLink>best practices</bestPracticeLink> and using <emojiLink>emoji in subject lines</emojiLink>.', 'mailpoet'), {
-    bestPracticeLink:
-    // eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label
-    (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      href: "https://www.mailpoet.com/blog/17-email-subject-line-best-practices-to-boost-engagement/",
-      target: "_blank",
-      rel: "noopener noreferrer",
-      onClick: () => (0,_events__WEBPACK_IMPORTED_MODULE_7__.recordEvent)('details_panel_subject_help_best_practice_link_clicked')
-    }),
-    emojiLink:
-    // eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label
-    (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      href: "https://www.mailpoet.com/blog/tips-using-emojis-in-subject-lines/",
-      target: "_blank",
-      rel: "noopener noreferrer",
-      onClick: () => (0,_events__WEBPACK_IMPORTED_MODULE_7__.recordEvent)('details_panel_subject_help_emoji_in_subject_lines_link_clicked')
-    })
-  });
-  const previewTextLength = (_mailpoetEmailData$pr = mailpoetEmailData?.preheader?.length) !== null && _mailpoetEmailData$pr !== void 0 ? _mailpoetEmailData$pr : 0;
-  const preheaderHelp = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_4__.createInterpolateElement)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('<link>This text</link> will appear in the inbox, underneath the subject line.', 'mailpoet'), {
-    link:
-    // eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label
-    (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      href: new URL('article/418-preview-text', 'https://kb.mailpoet.com/').toString(),
-      key: "preview-text-kb",
-      target: "_blank",
-      rel: "noopener noreferrer",
-      onClick: () => (0,_events__WEBPACK_IMPORTED_MODULE_7__.recordEvent)('details_panel_preheader_help_text_link_clicked')
-    })
-  });
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
-    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Details', 'mailpoet'),
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Details', 'mailpoet'),
     className: "mailpoet-email-editor__settings-panel",
-    onToggle: data => (0,_events__WEBPACK_IMPORTED_MODULE_7__.recordEvent)('details_panel_body_toggle', {
+    onToggle: data => (0,_events__WEBPACK_IMPORTED_MODULE_5__.recordEvent)('details_panel_body_toggle', {
       opened: data
     })
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_personalization_tags_rich_text_with_button__WEBPACK_IMPORTED_MODULE_8__.RichTextWithButton, {
-    attributeName: "subject",
-    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Subject', 'mailpoet'),
-    labelSuffix: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.ExternalLink, {
-      href: "https://kb.mailpoet.com/article/435-a-guide-to-personalisation-tags-for-tailored-newsletters#list",
-      onClick: () => (0,_events__WEBPACK_IMPORTED_MODULE_7__.recordEvent)('details_panel_personalisation_tags_guide_link_clicked')
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Guide', 'mailpoet')),
-    help: subjectHelp,
-    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Eg. The summer sale is here!', 'mailpoet')
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_personalization_tags_rich_text_with_button__WEBPACK_IMPORTED_MODULE_8__.RichTextWithButton, {
-    attributeName: "preheader",
-    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Preview text', 'mailpoet'),
-    labelSuffix: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: classnames__WEBPACK_IMPORTED_MODULE_5___default()('mailpoet-settings-panel__preview-text-length', {
-        'mailpoet-settings-panel__preview-text-length-warning': previewTextLength > previewTextRecommendedLength,
-        'mailpoet-settings-panel__preview-text-length-error': previewTextLength > previewTextMaxLength
-      })
-    }, previewTextLength, "/", previewTextMaxLength),
-    help: preheaderHelp,
-    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Add a preview text to capture subscribers' attention and increase open rates.", 'mailpoet')
-  }));
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(SidebarExtensionComponent, null)));
 }
 
 /***/ }),
@@ -9337,26 +9272,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   useContentValidation: () => (/* binding */ useContentValidation)
 /* harmony export */ });
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
-/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
-/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/blocks */ "@wordpress/blocks");
-/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _wordpress_core_data__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/core-data */ "@wordpress/core-data");
-/* harmony import */ var _wordpress_core_data__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_core_data__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../store */ "./src/store/constants.ts");
-/* harmony import */ var _use_shallow_equal__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./use-shallow-equal */ "./src/hooks/use-shallow-equal.ts");
-/* harmony import */ var _use_validation_notices__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./use-validation-notices */ "./src/hooks/use-validation-notices.ts");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_core_data__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/core-data */ "@wordpress/core-data");
+/* harmony import */ var _wordpress_core_data__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_core_data__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_hooks__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/hooks */ "@wordpress/hooks");
+/* harmony import */ var _wordpress_hooks__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_hooks__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../store */ "./src/store/constants.ts");
+/* harmony import */ var _use_shallow_equal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./use-shallow-equal */ "./src/hooks/use-shallow-equal.ts");
+/* harmony import */ var _use_validation_notices__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./use-validation-notices */ "./src/hooks/use-validation-notices.ts");
 /**
  * External dependencies
  */
-
-
 
 
 
@@ -9368,67 +9297,27 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+// Shared reference to an empty array for cases where it is important to avoid
+// returning a new array reference on every invocation
+const EMPTY_ARRAY = [];
 const useContentValidation = () => {
-  const {
-    contentBlockId,
-    hasFooter
-  } = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.useSelect)(select => {
-    const allBlocks = select(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.store).getBlocks();
-    const noBodyBlocks = allBlocks.filter(block => block.name !== 'mailpoet/powered-by-mailpoet' && block.name !== 'core/post-content');
-    // @ts-expect-error getBlocksByName is not defined in types
-    const blocks = select(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.store).getBlocksByName('core/post-content');
-    return {
-      contentBlockId: blocks?.[0],
-      hasFooter: noBodyBlocks.length > 0
-    };
-  });
   const {
     addValidationNotice,
     hasValidationNotice,
     removeValidationNotice
-  } = (0,_use_validation_notices__WEBPACK_IMPORTED_MODULE_6__.useValidationNotices)();
+  } = (0,_use_validation_notices__WEBPACK_IMPORTED_MODULE_4__.useValidationNotices)();
   const {
     editedContent,
-    editedTemplateContent,
-    postTemplateId
-  } = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.useSelect)(mapSelect => ({
-    editedContent: mapSelect(_store__WEBPACK_IMPORTED_MODULE_7__.storeName).getEditedEmailContent(),
-    editedTemplateContent: mapSelect(_store__WEBPACK_IMPORTED_MODULE_7__.storeName).getCurrentTemplateContent(),
-    postTemplateId: mapSelect(_store__WEBPACK_IMPORTED_MODULE_7__.storeName).getCurrentTemplate()?.id
+    editedTemplateContent
+  } = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_1__.useSelect)(mapSelect => ({
+    editedContent: mapSelect(_store__WEBPACK_IMPORTED_MODULE_5__.storeName).getEditedEmailContent(),
+    editedTemplateContent: mapSelect(_store__WEBPACK_IMPORTED_MODULE_5__.storeName).getCurrentTemplateContent()
   }));
-  const content = (0,_use_shallow_equal__WEBPACK_IMPORTED_MODULE_8__.useShallowEqual)(editedContent);
-  const templateContent = (0,_use_shallow_equal__WEBPACK_IMPORTED_MODULE_8__.useShallowEqual)(editedTemplateContent);
-  const contentLink = `<a data-link-href='[mailpoet/subscription-unsubscribe-url]' contenteditable='false' style='text-decoration: underline;' class='mailpoet-email-editor__personalization-tags-link'>${(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Unsubscribe', 'mailpoet')}</a> | <a data-link-href='[mailpoet/subscription-manage-url]' contenteditable='false' style='text-decoration: underline;' class='mailpoet-email-editor__personalization-tags-link'>${(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Manage subscription', 'mailpoet')}</a>`;
-  const rules = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useMemo)(() => {
-    const linksParagraphBlock = (0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_4__.createBlock)('core/paragraph', {
-      align: 'center',
-      fontSize: 'small',
-      content: contentLink
-    });
-    return [{
-      id: 'missing-unsubscribe-link',
-      test: emailContent => !emailContent.includes('[mailpoet/subscription-unsubscribe-url]'),
-      message: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('All emails must include an "Unsubscribe" link.', 'mailpoet'),
-      actions: [{
-        label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Insert link', 'mailpoet'),
-        onClick: () => {
-          if (!hasFooter) {
-            void (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.dispatch)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.store).insertBlock(linksParagraphBlock, undefined, contentBlockId);
-          } else {
-            void (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.dispatch)(_wordpress_core_data__WEBPACK_IMPORTED_MODULE_5__.store).editEntityRecord('postType', 'wp_template', postTemplateId, {
-              content: `
-                      ${editedTemplateContent}
-                      <!-- wp:paragraph {"align":"center","fontSize":"small"} -->
-                      ${contentLink}
-                      <!-- /wp:paragraph -->
-                    `
-            });
-          }
-        }
-      }]
-    }];
-  }, [contentBlockId, hasFooter, contentLink, postTemplateId, editedTemplateContent]);
-  const validateContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useCallback)(() => {
+  const rules = (0,_wordpress_hooks__WEBPACK_IMPORTED_MODULE_3__.applyFilters)('mailpoet_email_editor_content_validation_rules', EMPTY_ARRAY);
+  const content = (0,_use_shallow_equal__WEBPACK_IMPORTED_MODULE_6__.useShallowEqual)(editedContent);
+  const templateContent = (0,_use_shallow_equal__WEBPACK_IMPORTED_MODULE_6__.useShallowEqual)(editedTemplateContent);
+  const validateContent = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useCallback)(() => {
     let isValid = true;
     rules.forEach(({
       id,
@@ -9448,12 +9337,12 @@ const useContentValidation = () => {
   }, [content, templateContent, addValidationNotice, removeValidationNotice, hasValidationNotice, rules]);
 
   // Subscribe to updates so notices can be dismissed once resolved.
-  (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.subscribe)(() => {
+  (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_1__.subscribe)(() => {
     if (!hasValidationNotice()) {
       return;
     }
     validateContent();
-  }, _store__WEBPACK_IMPORTED_MODULE_7__.storeName);
+  }, _wordpress_core_data__WEBPACK_IMPORTED_MODULE_2__.store);
   return {
     isInvalid: hasValidationNotice(),
     validateContent
@@ -9834,10 +9723,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../store */ "./src/store/constants.ts");
+/* harmony import */ var _wordpress_hooks__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/hooks */ "@wordpress/hooks");
+/* harmony import */ var _wordpress_hooks__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_hooks__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../store */ "./src/store/constants.ts");
 /**
  * External dependencies
  */
+
 
 
 
@@ -9908,10 +9800,10 @@ function usePreviewTemplates(customEmailContent = '') {
     emailPosts,
     hasEmailPosts
   } = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.useSelect)(select => {
-    const rawEmailPosts = select(_store__WEBPACK_IMPORTED_MODULE_3__.storeName).getSentEmailEditorPosts();
+    const rawEmailPosts = select(_store__WEBPACK_IMPORTED_MODULE_4__.storeName).getSentEmailEditorPosts();
     return {
-      templates: select(_store__WEBPACK_IMPORTED_MODULE_3__.storeName).getEmailTemplates(),
-      patterns: select(_store__WEBPACK_IMPORTED_MODULE_3__.storeName).getBlockPatternsForEmailTemplate(),
+      templates: select(_store__WEBPACK_IMPORTED_MODULE_4__.storeName).getEmailTemplates(),
+      patterns: select(_store__WEBPACK_IMPORTED_MODULE_4__.storeName).getBlockPatternsForEmailTemplate(),
       emailPosts: rawEmailPosts,
       hasEmailPosts: !!(rawEmailPosts && rawEmailPosts?.length)
     };
@@ -9956,6 +9848,7 @@ function usePreviewTemplates(customEmailContent = '') {
   }, [templates, patterns, customEmailContent]);
   const allEmailPosts = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useMemo)(() => {
     return emailPosts?.map(post => {
+      const preferredTitle = (0,_wordpress_hooks__WEBPACK_IMPORTED_MODULE_3__.applyFilters)('mailpoet_email_editor_preferred_template_title', '', post);
       const {
         postTemplateContent
       } = generateTemplateContent(post, allTemplates);
@@ -9967,8 +9860,8 @@ function usePreviewTemplates(customEmailContent = '') {
       const template = {
         ...post,
         title: {
-          raw: post?.mailpoet_data?.subject || post.title.raw,
-          rendered: post?.mailpoet_data?.subject || post.title.rendered // use MailPoet subject as title
+          raw: post.title.raw,
+          rendered: preferredTitle || post.title.rendered
         }
       };
       return {
@@ -10482,7 +10375,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   togglePersonalizationTagsModal: () => (/* binding */ togglePersonalizationTagsModal),
 /* harmony export */   togglePreviewModal: () => (/* binding */ togglePreviewModal),
 /* harmony export */   toggleSettingsSidebarActiveTab: () => (/* binding */ toggleSettingsSidebarActiveTab),
-/* harmony export */   updateEmailMailPoetProperty: () => (/* binding */ updateEmailMailPoetProperty),
 /* harmony export */   updateSendPreviewEmail: () => (/* binding */ updateSendPreviewEmail)
 /* harmony export */ });
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
@@ -10604,19 +10496,6 @@ function* saveEditedEmail() {
     });
   });
 }
-function* updateEmailMailPoetProperty(name, value) {
-  const postId = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_0__.select)(_constants__WEBPACK_IMPORTED_MODULE_12__.storeName).getEmailPostId();
-  // There can be a better way how to get the edited post data
-  const editedPost = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_0__.select)(_wordpress_core_data__WEBPACK_IMPORTED_MODULE_2__.store).getEditedEntityRecord('postType', _constants__WEBPACK_IMPORTED_MODULE_12__.editorCurrentPostType, postId);
-  // @ts-expect-error Property 'mailpoet_data' does not exist on type 'Updatable<Attachment<any>>'.
-  const mailpoetData = editedPost?.mailpoet_data || {};
-  yield (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_0__.dispatch)(_wordpress_core_data__WEBPACK_IMPORTED_MODULE_2__.store).editEntityRecord('postType', _constants__WEBPACK_IMPORTED_MODULE_12__.editorCurrentPostType, postId, {
-    mailpoet_data: {
-      ...mailpoetData,
-      [name]: value
-    }
-  });
-}
 const setTemplateToPost = templateSlug => async ({
   registry
 }) => {
@@ -10625,7 +10504,7 @@ const setTemplateToPost = templateSlug => async ({
     template: templateSlug
   });
 };
-function* requestSendingNewsletterPreview(newsletterId, email) {
+function* requestSendingNewsletterPreview(email) {
   // If preview is already sending do nothing
   const previewState = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_0__.select)(_constants__WEBPACK_IMPORTED_MODULE_12__.storeName).getPreviewState();
   if (previewState.isSendingPreviewEmail) {
@@ -10645,7 +10524,6 @@ function* requestSendingNewsletterPreview(newsletterId, email) {
       path: '/mailpoet-email-editor/v1/send_preview_email',
       method: 'POST',
       data: {
-        newsletterId,
         email,
         postId
       }
@@ -10669,7 +10547,10 @@ function* requestSendingNewsletterPreview(newsletterId, email) {
       type: 'CHANGE_PREVIEW_STATE',
       state: {
         sendingPreviewStatus: _types__WEBPACK_IMPORTED_MODULE_13__.SendingPreviewStatus.ERROR,
-        isSendingPreviewEmail: false
+        isSendingPreviewEmail: false,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        errorMessage: JSON.stringify(errorResponse?.error)
       }
     };
   }
@@ -11059,10 +10940,9 @@ const isEmpty = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_0__.createRegistrySe
   }
   const {
     content,
-    mailpoet_data: mailpoetData,
     title
   } = post;
-  return !content.raw && !mailpoetData.subject && !mailpoetData.preheader && !title.raw;
+  return !content.raw && !title.raw;
 });
 const hasEmptyContent = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_0__.createRegistrySelector)(select => () => {
   const postId = select(_constants__WEBPACK_IMPORTED_MODULE_6__.storeName).getEmailPostId();

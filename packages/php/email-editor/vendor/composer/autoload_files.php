@@ -7,5 +7,4 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'a4a119a56e50fbb293281d9a48007e0e' => $vendorDir . '/symfony/polyfill-php80/bootstrap.php',
-    'ba6018d54244eae1ca1c3c65edf949d6' => $baseDir . '/src/exceptions.php',
 );

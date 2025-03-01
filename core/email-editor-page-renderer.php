@@ -52,14 +52,14 @@ class EmailEditorPageRenderer
       $assetsParams = require EMAIL_EDITOR_DEMO_PATH . '/packages/js/email-editor/build/index.asset.php';
 
       wp_enqueue_script(
-        'mailpoet_email_editor',
+        'email_editor_demo',
         EMAIL_EDITOR_DEMO_URL . '/packages/js/email-editor/build/index.js',
         $assetsParams['dependencies'],
         $assetsParams['version'],
         true
       );
       wp_enqueue_style(
-        'mailpoet_email_editor',
+        'email_editor_demo',
         EMAIL_EDITOR_DEMO_URL . '/packages/js/email-editor/build/index.css',
         [],
         $assetsParams['version']
@@ -70,14 +70,14 @@ class EmailEditorPageRenderer
       $assetsParams = require EMAIL_EDITOR_DEMO_PATH . "/build/{$fileName}.asset.php";
 
       wp_enqueue_script(
-        'mailpoet_email_editor',
+        'email_editor_demo',
         EMAIL_EDITOR_DEMO_URL . "/build/{$fileName}.js",
         $assetsParams['dependencies'],
         $assetsParams['version'],
         true
       );
       wp_enqueue_style(
-        'mailpoet_email_editor',
+        'email_editor_demo',
         EMAIL_EDITOR_DEMO_URL . "/build/{$fileName}.css",
         [],
         $assetsParams['version']
@@ -86,7 +86,7 @@ class EmailEditorPageRenderer
 
     $currentUserEmail = wp_get_current_user()->user_email;
     wp_localize_script(
-      'mailpoet_email_editor',
+      'email_editor_demo',
       'MailPoetEmailEditor',
       [
         'current_post_type' => esc_js($currentPostType),
@@ -117,11 +117,12 @@ class EmailEditorPageRenderer
   }
 
 	private function preloadRestApiData(\WP_Post $post): void {
+		$currentPostType = $post->post_type;
     $userThemePostId = $this->userTheme->get_user_theme_post()->ID;
     $templateSlug = get_post_meta($post->ID, '_wp_page_template', true);
     $routes = [
-      '/wp/v2/mailpoet_email/' . intval($post->ID) . '?context=edit',
-      '/wp/v2/types/mailpoet_email?context=edit',
+      "/wp/v2/{$currentPostType}/" . intval($post->ID) . '?context=edit',
+			"/wp/v2/types/{$currentPostType}?context=edit",
       '/wp/v2/global-styles/' . intval($userThemePostId) . '?context=edit', // Global email styles
       '/wp/v2/block-patterns/patterns',
       '/wp/v2/templates?context=edit',
@@ -132,9 +133,9 @@ class EmailEditorPageRenderer
     ];
 
     if ($templateSlug) {
-      $routes[] = '/wp/v2/templates/lookup?slug=' . $templateSlug;
+      $routes[] = "/wp/v2/templates/lookup?slug={$templateSlug}";
     } else {
-      $routes[] = '/wp/v2/mailpoet_email?context=edit&per_page=30&status=publish,sent';
+      $routes[] = "/wp/v2/{$currentPostType}?context=edit&per_page=30&status=publish,sent";
     }
 
     // Preload the data for the specified routes

@@ -48,13 +48,6 @@ class Base extends MailPoetEmailEditorContainerDefinition
   {
 	$container = $this->di_container;
 
-    $container->set(
-      EmailEditorDemoApiController::class,
-      function () {
-        return new EmailEditorDemoApiController();
-      }
-    );
-
 	$container->set(
       Cdn_Asset_Url::class,
       function () {
@@ -92,7 +85,6 @@ class Base extends MailPoetEmailEditorContainerDefinition
       function ($container) {
         return new EmailEditorDemoIntegration(
           $container->get(EmailEditorPageRenderer::class),
-          $container->get(EmailEditorDemoApiController::class),
           $container->get(\EmailEditorDemo\Patterns\PatternsController::class),
           $container->get(\EmailEditorDemo\Templates\TemplatesController::class),
         );
