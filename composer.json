@@ -1,0 +1,5 @@
+{
+    "require": {
+        "woocommerce/email-editor": "^1.0"
+    }
+}

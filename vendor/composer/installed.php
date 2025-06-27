@@ -1,0 +1,41 @@
+<?php return array(
+    'root' => array(
+        'name' => '__root__',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => '681001305c190e1ed5392bf0cbb587272147519e',
+        'type' => 'library',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'dev' => true,
+    ),
+    'versions' => array(
+        '__root__' => array(
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '681001305c190e1ed5392bf0cbb587272147519e',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'soundasleep/html2text' => array(
+            'pretty_version' => '2.1.0',
+            'version' => '2.1.0.0',
+            'reference' => '83502b6f8f1aaef8e2e238897199d64f284b4af3',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../soundasleep/html2text',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'woocommerce/email-editor' => array(
+            'pretty_version' => '1.0.0',
+            'version' => '1.0.0.0',
+            'reference' => '67eb82fb45694add6ff07c6434ecfbdd8d80f054',
+            'type' => 'wordpress-plugin',
+            'install_path' => __DIR__ . '/../woocommerce/email-editor',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+    ),
+);
