@@ -17,5 +17,16 @@
 	},
 	"dependencies": {
 		"@woocommerce/email-editor": "^0.1.0"
-	}
+	},
+	"files": [
+		"vendor",
+		"build",
+		"core",
+		"email-editor-demo.php",
+		"composer.json",
+		"composer.lock",
+		"package.json",
+		"package-lock.json",
+		"README.md"
+	]
 }
