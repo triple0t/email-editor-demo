@@ -36,7 +36,7 @@ class Initializer
 			'initialize',
 		]);
 
-		add_filter('mailpoet_email_editor_initialized', [
+		add_filter('woocommerce_email_editor_initialized', [
 			$this,
 			'setupEmailEditorIntegrations',
 		]);
@@ -55,7 +55,7 @@ class Initializer
 
 		// check if a new post is needed
 		$args = [
-			'post_type' => EmailEditorDemoIntegration::MAILPOET_EMAIL_POST_TYPE,
+			'post_type' => EmailEditorDemoIntegration::EMAIL_POST_TYPE,
 			'post_status' => 'draft',
 			'posts_per_page' => 1,
 		];
@@ -68,7 +68,7 @@ class Initializer
 			'post_title' => __('New Email', 'email-editor-demo'),
 			'post_content' => '',
 			'post_status' => 'draft',
-			'post_type' => EmailEditorDemoIntegration::MAILPOET_EMAIL_POST_TYPE,
+			'post_type' => EmailEditorDemoIntegration::EMAIL_POST_TYPE,
 		];
 		wp_insert_post($post);
 	}

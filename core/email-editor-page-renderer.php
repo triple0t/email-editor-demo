@@ -30,7 +30,7 @@ class EmailEditorPageRenderer
     $postId = isset($_GET['post']) ? intval($_GET['post']) : 0;
     $post = get_post($postId);
 		$currentPostType = $post->post_type;
-    if (!$post instanceof \WP_Post || $currentPostType !== EmailEditorDemoIntegration::MAILPOET_EMAIL_POST_TYPE) { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+    if (!$post instanceof \WP_Post || $currentPostType !== EmailEditorDemoIntegration::EMAIL_POST_TYPE) { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
       return;
     }
 
@@ -87,7 +87,7 @@ class EmailEditorPageRenderer
     $currentUserEmail = wp_get_current_user()->user_email;
     wp_localize_script(
       'email_editor_demo',
-      'MailPoetEmailEditor',
+      'WooCommerceEmailEditor',
       [
         'current_post_type' => esc_js($currentPostType),
         'current_post_id' => $post->ID,
@@ -96,8 +96,8 @@ class EmailEditorPageRenderer
         'editor_theme' => $this->themeController->get_base_theme()->get_raw_data(),
         'user_theme_post_id' => $this->userTheme->get_user_theme_post()->ID,
         'urls' => [
-          'listings' => admin_url('edit.php?post_type=' . EmailEditorDemoIntegration::MAILPOET_EMAIL_POST_TYPE),
-          'send' => admin_url('edit.php?post_type=' . EmailEditorDemoIntegration::MAILPOET_EMAIL_POST_TYPE),
+          'listings' => admin_url('edit.php?post_type=' . EmailEditorDemoIntegration::EMAIL_POST_TYPE),
+          'send' => admin_url('edit.php?post_type=' . EmailEditorDemoIntegration::EMAIL_POST_TYPE),
         ],
       ]
     );
@@ -113,7 +113,7 @@ class EmailEditorPageRenderer
     $this->preloadRestApiData($post);
 
     require_once ABSPATH . 'wp-admin/admin-header.php';
-    echo '<div id="mailpoet-email-editor" class="block-editor block-editor__container hide-if-no-js"></div>';
+    echo '<div id="woocommerce-email-editor" class="block-editor block-editor__container hide-if-no-js"></div>';
   }
 
 	private function preloadRestApiData(\WP_Post $post): void {

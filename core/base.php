@@ -12,8 +12,6 @@ use Automattic\WooCommerce\EmailEditor\Engine\Theme_Controller;
 use Automattic\WooCommerce\EmailEditor\Engine\User_Theme;
 use Automattic\WooCommerce\EmailEditor\Integrations\Core\Initializer;
 
-// The MailPoetEmailEditorContainerDefinition is a clone of packages/php/email-editor/tests/integration/_bootstrap.php file
-// We are using this file to define the DI container for the email editor package
 class Base
 {
 	public static $instance;

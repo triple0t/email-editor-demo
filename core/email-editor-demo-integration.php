@@ -10,7 +10,7 @@ use EmailEditorDemo\Templates\TemplatesController;
 class EmailEditorDemoIntegration
 {
 
-	const MAILPOET_EMAIL_POST_TYPE = 'editor_demo_mail';
+	const EMAIL_POST_TYPE = 'editor_demo_mail';
 
 	private EmailEditorPageRenderer $editorPageRenderer;
 
@@ -30,8 +30,8 @@ class EmailEditorDemoIntegration
 
 	public function initialize(): void
 	{
-		add_filter('mailpoet_email_editor_post_types', [$this, 'addEmailPostType']);
-		add_filter('mailpoet_is_email_editor_page', [$this, 'isEditorPage'], 10, 1);
+		add_filter('woocommerce_email_editor_post_types', [$this, 'addEmailPostType']);
+		add_filter('woocommerce_is_email_editor_page', [$this, 'isEditorPage'], 10, 1);
 		add_filter('replace_editor', [$this, 'replaceEditor'], 10, 2);
 		// register patterns
 		$this->patternsController->registerPatterns();
@@ -43,7 +43,7 @@ class EmailEditorDemoIntegration
 	public function addEmailPostType(array $postTypes): array
 	{
 		$postTypes[] = [
-			'name' => self::MAILPOET_EMAIL_POST_TYPE,
+			'name' => self::EMAIL_POST_TYPE,
 			'args' => [
 				'labels' => [
 					'name' => __('Emails', 'email-editor-demo'),
@@ -54,7 +54,7 @@ class EmailEditorDemoIntegration
 					'view_item' => __('View Email', 'email-editor-demo'),
 					'search_items' => __('Search Emails', 'email-editor-demo')
 				],
-				'rewrite' => ['slug' => self::MAILPOET_EMAIL_POST_TYPE],
+				'rewrite' => ['slug' => self::EMAIL_POST_TYPE],
 				'supports' => ['title', 'editor'],
 				'public' => true,
 				'show_ui' => true,
@@ -74,7 +74,7 @@ class EmailEditorDemoIntegration
 		// We need to check early if we are on the email editor page. The check runs early so we can't use current_screen() here.
 		if (is_admin() && isset($_GET['post']) && isset($_GET['action']) && $_GET['action'] === 'edit') {
 			$post = get_post((int)$_GET['post']);
-			return $post && $post->post_type === self::MAILPOET_EMAIL_POST_TYPE; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+			return $post && $post->post_type === self::EMAIL_POST_TYPE; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 		}
 
 		return false;
@@ -83,7 +83,7 @@ class EmailEditorDemoIntegration
 	public function replaceEditor($replace, $post)
 	{
 		$currentScreen = get_current_screen();
-		if ($post->post_type === self::MAILPOET_EMAIL_POST_TYPE && $currentScreen) { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+		if ($post->post_type === self::EMAIL_POST_TYPE && $currentScreen) { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 			$this->editorPageRenderer->render();
 			return true;
 		}
@@ -92,7 +92,7 @@ class EmailEditorDemoIntegration
 
 	public function registerPersonalizationTags()
 	{
-		add_filter('mailpoet_email_editor_register_personalization_tags', function (Personalization_Tags_Registry $registry): Personalization_Tags_Registry {
+		add_filter('woocommerce_email_editor_register_personalization_tags', function (Personalization_Tags_Registry $registry): Personalization_Tags_Registry {
 			$registry->register(new Personalization_Tag(
 				__('Email', 'email-editor-demo'),
 				'mailpoet/subscriber-email', // testing using mailpoet -- not working
