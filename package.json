@@ -6,7 +6,6 @@
 	"license": "GPL-2.0-or-later",
 	"main": "build/index.js",
 	"scripts": {
-		"preinstall": "npm run patch-files && cd packages/js/email-editor && npm install --dev && cd ../../php/email-editor && composer install",
 		"postinstall": "npm run build",
 		"build": "cd packages/js/email-editor && npm run build && cp -Rf build ../../..",
 		"dev": "cd packages/js/email-editor && npm run start",
@@ -18,5 +17,8 @@
 	},
 	"devDependencies": {
 		"@wordpress/scripts": "^30.5.1"
+	},
+	"dependencies": {
+		"@woocommerce/email-editor": "^0.1.0"
 	}
 }
