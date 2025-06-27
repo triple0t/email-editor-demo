@@ -10,10 +10,7 @@
 		"start": "wp-scripts start",
         "build": "wp-scripts build",
 		"dev:dump-autoload": "composer dump-autoload -o",
-		"patch-files": "npm run patch:composer-json && npm run patch:email-editor-js-files && npm run patch:create-container-file",
-		"patch:composer-json": "php -d memory_limit=-1 tasks/patch-composer-json.php",
-		"patch:email-editor-js-files": "php -d memory_limit=-1 tasks/patch-email-editor-js-package.php",
-		"patch:create-container-file": "php -d memory_limit=-1 tasks/patch-container.php"
+		"plugin-zip": "wp-scripts plugin-zip"
 	},
 	"devDependencies": {
 		"@wordpress/scripts": "^30.5.1"

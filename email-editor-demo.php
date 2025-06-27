@@ -24,9 +24,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'EMAIL_EDITOR_DEMO_PATH', dirname( __FILE__ ) );
 define( 'EMAIL_EDITOR_DEMO_URL', plugins_url( '', __FILE__ ) );
 
-// When using dev build e.g wp-scripts start
-define( 'EMAIL_EDITOR_DEMO_USE_DEV_BUILD', false );
-
 // Autoloader
 require_once __DIR__ . '/vendor/autoload.php';
 

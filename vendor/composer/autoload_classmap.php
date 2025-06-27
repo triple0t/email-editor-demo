@@ -91,7 +91,6 @@ return array(
     'Automattic\\WooCommerce\\EmailEditor\\Validator\\Validator' => $vendorDir . '/woocommerce/email-editor/src/Validator/class-validator.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'EmailEditorDemo\\Base' => $baseDir . '/core/base.php',
-    'EmailEditorDemo\\Cdn_Asset_Url' => $baseDir . '/core/class-cdn-asset-url.php',
     'EmailEditorDemo\\EditorDemoCssInliner' => $baseDir . '/core/editor-demo-css-inliner.php',
     'EmailEditorDemo\\EmailEditorDemoIntegration' => $baseDir . '/core/email-editor-demo-integration.php',
     'EmailEditorDemo\\EmailEditorPageRenderer' => $baseDir . '/core/email-editor-page-renderer.php',

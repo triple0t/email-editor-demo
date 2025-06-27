@@ -124,7 +124,6 @@ class ComposerStaticInit4f9b474cf63da534b2715a171e5ba055
         'Automattic\\WooCommerce\\EmailEditor\\Validator\\Validator' => __DIR__ . '/..' . '/woocommerce/email-editor/src/Validator/class-validator.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'EmailEditorDemo\\Base' => __DIR__ . '/../..' . '/core/base.php',
-        'EmailEditorDemo\\Cdn_Asset_Url' => __DIR__ . '/../..' . '/core/class-cdn-asset-url.php',
         'EmailEditorDemo\\EditorDemoCssInliner' => __DIR__ . '/../..' . '/core/editor-demo-css-inliner.php',
         'EmailEditorDemo\\EmailEditorDemoIntegration' => __DIR__ . '/../..' . '/core/email-editor-demo-integration.php',
         'EmailEditorDemo\\EmailEditorPageRenderer' => __DIR__ . '/../..' . '/core/email-editor-page-renderer.php',

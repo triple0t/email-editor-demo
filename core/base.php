@@ -51,13 +51,6 @@ class Base
 		$container = Email_Editor_Container::container();
 
 		$container->set(
-			Cdn_Asset_Url::class,
-			function () {
-				return new Cdn_Asset_Url('');
-			}
-		);
-
-		$container->set(
 			\EmailEditorDemo\Patterns\PatternsController::class,
 			function () {
 				return new \EmailEditorDemo\Patterns\PatternsController();
