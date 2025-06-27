@@ -1,20 +1,24 @@
 {
 	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
 	"landingPage": "/wp-admin/edit.php?post_type=editor_demo_mail",
+	"preferredVersions": {
+		"php": "8.1",
+		"wp": "8.1"
+	},
 	"steps": [
-	  {
-		"step": "login",
-		"username": "admin"
-	  },
-	  {
-		"step": "installPlugin",
-		"pluginData": {
-		  "resource": "url",
-		  "url": "https://github-proxy.com/proxy/?repo=triple0t/email-editor-demo&branch=main"
+		{
+			"step": "login",
+			"username": "admin"
 		},
-		"options": {
-		  "activate": true
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "url",
+				"url": "https://github-proxy.com/proxy/?repo=triple0t/email-editor-demo&branch=main"
+			},
+			"options": {
+				"activate": true
+			}
 		}
-	  }
 	]
-  }
+}
