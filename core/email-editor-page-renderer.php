@@ -2,9 +2,9 @@
 
 namespace EmailEditorDemo;
 
-use MailPoet\EmailEditor\Engine\Settings_Controller;
-use MailPoet\EmailEditor\Engine\Theme_Controller;
-use MailPoet\EmailEditor\Engine\User_Theme;
+use Automattic\WooCommerce\EmailEditor\Engine\Settings_Controller;
+use Automattic\WooCommerce\EmailEditor\Engine\Theme_Controller;
+use Automattic\WooCommerce\EmailEditor\Engine\User_Theme;
 
 class EmailEditorPageRenderer
 {
