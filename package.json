@@ -7,9 +7,9 @@
 	"main": "build/index.js",
 	"scripts": {
 		"postinstall": "npm run build",
-		"build": "cd packages/js/email-editor && npm run build && cp -Rf build ../../..",
-		"dev": "cd packages/js/email-editor && npm run start",
-		"dev:dump-autoload": "cd packages/php/email-editor && composer dump-autoload",
+		"start": "wp-scripts start",
+        "build": "wp-scripts build",
+		"dev:dump-autoload": "composer dump-autoload -o",
 		"patch-files": "npm run patch:composer-json && npm run patch:email-editor-js-files && npm run patch:create-container-file",
 		"patch:composer-json": "php -d memory_limit=-1 tasks/patch-composer-json.php",
 		"patch:email-editor-js-files": "php -d memory_limit=-1 tasks/patch-email-editor-js-package.php",
