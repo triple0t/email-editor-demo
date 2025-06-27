@@ -34,7 +34,7 @@ class EmailEditorDemoIntegration
 		add_filter('woocommerce_is_email_editor_page', [$this, 'isEditorPage'], 10, 1);
 		add_filter('replace_editor', [$this, 'replaceEditor'], 10, 2);
 		// register patterns
-		$this->patternsController->registerPatterns();
+		$this->patternsController->initialize();
 		// register templates
 		$this->templatesController->initialize();
 		$this->registerPersonalizationTags();

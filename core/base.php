@@ -90,9 +90,7 @@ class Base
 			\EmailEditorDemo\Initializer::class,
 			function ($container) {
 				return new \EmailEditorDemo\Initializer(
-					$container->get(Email_Editor::class),
 					$container->get(EmailEditorDemoIntegration::class),
-					$container->get(Initializer::class),
 				);
 			}
 		);

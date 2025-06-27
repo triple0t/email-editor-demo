@@ -2,30 +2,18 @@
 
 namespace EmailEditorDemo;
 
-use Automattic\WooCommerce\EmailEditor\Engine\Email_Editor;
-use Automattic\WooCommerce\EmailEditor\Integrations\Core\Initializer as CoreEmailEditorIntegration;
+use Automattic\WooCommerce\EmailEditor\Email_Editor_Container;
 
 
 class Initializer
 {
-
-	/** @var Email_Editor */
-	private $emailEditor;
-
 	/** @var EmailEditorDemoIntegration */
-	private $mailpoetEmailEditorIntegration;
-
-	/** @var CoreEmailEditorIntegration */
-	private $coreEmailEditorIntegration;
+	private $demoEditorIntegration;
 
 	public function __construct(
-		Email_Editor $emailEditor,
 		EmailEditorDemoIntegration $mailpoetEmailEditorIntegration,
-		CoreEmailEditorIntegration $coreEmailEditorIntegration,
 	) {
-		$this->emailEditor = $emailEditor;
-		$this->mailpoetEmailEditorIntegration = $mailpoetEmailEditorIntegration;
-		$this->coreEmailEditorIntegration = $coreEmailEditorIntegration;
+		$this->demoEditorIntegration = $mailpoetEmailEditorIntegration;
 	}
 
 	public function init()
@@ -36,15 +24,12 @@ class Initializer
 			'initialize',
 		]);
 
-		add_filter('woocommerce_email_editor_initialized', [
-			$this,
-			'setupEmailEditorIntegrations',
-		]);
+		$this->demoEditorIntegration->initialize();
+		Email_Editor_Container::init();
 	}
 
 	public function initialize()
 	{
-		$this->emailEditor->initialize();
 		$this->createDemoPost();
 	}
 
@@ -71,11 +56,5 @@ class Initializer
 			'post_type' => EmailEditorDemoIntegration::EMAIL_POST_TYPE,
 		];
 		wp_insert_post($post);
-	}
-
-	public function setupEmailEditorIntegrations()
-	{
-		$this->mailpoetEmailEditorIntegration->initialize();
-		$this->coreEmailEditorIntegration->initialize();
 	}
 }
