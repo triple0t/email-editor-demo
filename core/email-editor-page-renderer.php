@@ -81,6 +81,13 @@ class EmailEditorPageRenderer
 
 		$this->preloadRestApiData($post);
 
+		// Preload server-registered block schemas to avoid warning about missing block titles.
+		// See: https://github.com/WordPress/WordPress/blob/753817d462955eb4e40a89034b7b7c375a1e43f3/wp-admin/edit-form-blocks.php#L144C1-L148C3.
+		wp_add_inline_script(
+			'wp-blocks',
+			sprintf( 'wp.blocks.unstable__bootstrapServerSideBlockDefinitions( %s );', wp_json_encode( get_block_editor_server_block_settings() ) )
+		);
+
 		require_once ABSPATH . 'wp-admin/admin-header.php';
 		echo '<div id="email-editor-demo-container" class="block-editor block-editor__container hide-if-no-js"></div>';
 	}

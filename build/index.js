@@ -1045,7 +1045,7 @@ __webpack_require__.r(__webpack_exports__);
 function InnerEditor({ postId: initialPostId, postType: initialPostType, settings, }) {
     const { currentPost, onNavigateToEntityRecord, onNavigateToPreviousEntityRecord, } = (0,_hooks_use_navigate_to_entity_record__WEBPACK_IMPORTED_MODULE_7__.useNavigateToEntityRecord)(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    initialPostId, 
+    initialPostId,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     initialPostType, 'post-only');
     // isFullScreenForced – comes from settings and cannot be changed by the user
@@ -2511,11 +2511,11 @@ function BlockCompatibilityWarnings() {
     // Select the currently selected block
     const selectedBlock = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.useSelect)((sel) => sel('core/block-editor').getSelectedBlock(), []);
     // Check if the selected block has enabled border configuration
-    const hasBorderSupport = (0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__.hasBlockSupport)(selectedBlock?.name, 
+    const hasBorderSupport = (0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__.hasBlockSupport)(selectedBlock?.name,
     // @ts-expect-error Border is not yet supported in the types
     'border', false) ||
         // We can remove the check for __experimentalBorder after we support WordPress 6.8+.
-        (0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__.hasBlockSupport)(selectedBlock?.name, 
+        (0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__.hasBlockSupport)(selectedBlock?.name,
         // @ts-expect-error Border is not yet supported in the types
         '__experimentalBorder', false);
     return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, { children: [hasBorderSupport && ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Fill, { name: "InspectorControlsBorder", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Notice, { className: "woocommerce-grid-full-width", status: "warning", isDismissible: false, children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Border display may vary or be unsupported in some email clients.', 'woocommerce'), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("br", {}), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Units other than pixels (px) lack support in old email clients.', 'woocommerce')] }) })), hasBackgroundImageSupport(selectedBlock?.name) && ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Fill, { name: "InspectorControlsBackground", children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Notice, { className: "woocommerce-grid-full-width", status: "warning", isDismissible: false, children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Select a background color for email clients that do not support background images.', 'woocommerce') }) }))] }));
@@ -2565,7 +2565,7 @@ function EditTemplateModal({ close }) {
         const { getEditorSettings } = sel(_wordpress_editor__WEBPACK_IMPORTED_MODULE_4__.store);
         const editorSettings = getEditorSettings();
         return {
-            onNavigateToEntityRecord: 
+            onNavigateToEntityRecord:
             // @ts-expect-error onNavigateToEntityRecord type is not defined
             editorSettings.onNavigateToEntityRecord,
             template: sel(_store__WEBPACK_IMPORTED_MODULE_6__.storeName).getCurrentTemplate(),
@@ -4154,6 +4154,7 @@ function Editor() {
         settings: select(_store__WEBPACK_IMPORTED_MODULE_5__.storeName).getInitialEditorSettings(),
     }), []);
     (0,_hooks_use_content_validation__WEBPACK_IMPORTED_MODULE_6__.useContentValidation)();
+	settings.allowedBlockTypes = wp.blocks.getBlockTypes().filter( ( block ) => block.supports?.email === true).map( ( block ) => block.name );
     return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.StrictMode, { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_block_editor__WEBPACK_IMPORTED_MODULE_7__.InnerEditor, { postId: postId, postType: _store__WEBPACK_IMPORTED_MODULE_5__.editorCurrentPostType, settings: settings }) }));
 }
 function initialize(elementId) {
@@ -4708,7 +4709,7 @@ function NextPublishSlot({ children }) {
 function PublishSave() {
     const observerRef = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
     const { hasNonPostEntityChanges, isEditedPostDirty } = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_2__.useSelect)((select) => ({
-        hasNonPostEntityChanges: 
+        hasNonPostEntityChanges:
         // @ts-expect-error hasNonPostEntityChanges is not typed in @types/wordpress__editor
         select(_wordpress_editor__WEBPACK_IMPORTED_MODULE_3__.store).hasNonPostEntityChanges(),
         isEditedPostDirty: select(_wordpress_editor__WEBPACK_IMPORTED_MODULE_3__.store).isEditedPostDirty(),
@@ -4898,7 +4899,7 @@ const EMPTY_ARRAY = [];
 function useEmailCss() {
     const { userTheme } = (0,_use_user_theme__WEBPACK_IMPORTED_MODULE_4__.useUserTheme)();
     const { editorTheme, layout, deviceType, editorSettingsStyles } = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_1__.useSelect)((select) => {
-        const { getEditorSettings, 
+        const { getEditorSettings,
         // @ts-expect-error getDeviceType is not in types.
         getDeviceType, } = select(_wordpress_editor__WEBPACK_IMPORTED_MODULE_2__.store);
         const editorSettings = getEditorSettings();
@@ -5640,7 +5641,7 @@ function JustificationControls({ justificationValue, onChange, isToolbar = false
 function LayoutControls({ setAttributes, attributes, name: blockName }) {
     const layoutBlockSupport = (0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_4__.getBlockSupport)(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    blockName, 
+    blockName,
     // @ts-expect-error No types for this exist yet.
     layoutBlockSupportKey, {});
     if (!layoutBlockSupport) {
@@ -6265,7 +6266,7 @@ const getCurrentTemplate = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_0__.creat
     const isEditingTemplate = select(_wordpress_editor__WEBPACK_IMPORTED_MODULE_2__.store).getCurrentPostType() === 'wp_template';
     if (isEditingTemplate) {
         const templateId = select(_wordpress_editor__WEBPACK_IMPORTED_MODULE_2__.store).getCurrentPostId();
-        return select(_wordpress_core_data__WEBPACK_IMPORTED_MODULE_1__.store).getEditedEntityRecord('postType', 'wp_template', 
+        return select(_wordpress_core_data__WEBPACK_IMPORTED_MODULE_1__.store).getEditedEntityRecord('postType', 'wp_template',
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         templateId);
     }
@@ -6312,7 +6313,7 @@ const getEmailTemplates = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_0__.create
 })
     // We still need to filter the templates because, in some cases, the API also returns custom templates
     // ignoring the post_type filter in the query
-    ?.filter((template) => 
+    ?.filter((template) =>
 // @ts-expect-error Missing property in type
 template.post_types.includes(_constants__WEBPACK_IMPORTED_MODULE_5__.editorCurrentPostType)));
 function getEmailPostId(state) {
@@ -7511,7 +7512,7 @@ function r(e){var t,f,n="";if("string"==typeof e||"number"==typeof e)n+=e;else i
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -7525,17 +7526,17 @@ function r(e){var t,f,n="";if("string"==typeof e||"number"==typeof e)n+=e;else i
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/ 	
+/******/
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = __webpack_modules__;
-/******/ 	
+/******/
 /************************************************************************/
 /******/ 	/* webpack/runtime/chunk loaded */
 /******/ 	(() => {
@@ -7570,7 +7571,7 @@ function r(e){var t,f,n="";if("string"==typeof e||"number"==typeof e)n+=e;else i
 /******/ 			return result;
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	(() => {
 /******/ 		// getDefaultExport function for compatibility with non-harmony modules
@@ -7582,7 +7583,7 @@ function r(e){var t,f,n="";if("string"==typeof e||"number"==typeof e)n+=e;else i
 /******/ 			return getter;
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -7594,12 +7595,12 @@ function r(e){var t,f,n="";if("string"==typeof e||"number"==typeof e)n+=e;else i
 /******/ 			}
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -7610,11 +7611,11 @@ function r(e){var t,f,n="";if("string"==typeof e||"number"==typeof e)n+=e;else i
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/jsonp chunk loading */
 /******/ 	(() => {
 /******/ 		// no baseURI
-/******/ 		
+/******/
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
@@ -7622,19 +7623,19 @@ function r(e){var t,f,n="";if("string"==typeof e||"number"==typeof e)n+=e;else i
 /******/ 			"index": 0,
 /******/ 			"./style-index": 0
 /******/ 		};
-/******/ 		
+/******/
 /******/ 		// no chunk on demand loading
-/******/ 		
+/******/
 /******/ 		// no prefetching
-/******/ 		
+/******/
 /******/ 		// no preloaded
-/******/ 		
+/******/
 /******/ 		// no HMR
-/******/ 		
+/******/
 /******/ 		// no HMR manifest
-/******/ 		
+/******/
 /******/ 		__webpack_require__.O.j = (chunkId) => (installedChunks[chunkId] === 0);
-/******/ 		
+/******/
 /******/ 		// install a JSONP callback for chunk loading
 /******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
 /******/ 			var chunkIds = data[0];
@@ -7661,20 +7662,20 @@ function r(e){var t,f,n="";if("string"==typeof e||"number"==typeof e)n+=e;else i
 /******/ 			}
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
-/******/ 		
+/******/
 /******/ 		var chunkLoadingGlobal = self["webpackChunkmailpoet_email_editor_demo"] = self["webpackChunkmailpoet_email_editor_demo"] || [];
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
-/******/ 	
+/******/
 /************************************************************************/
-/******/ 	
+/******/
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
 /******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["./style-index"], () => (__webpack_require__("./src/index.js")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
-/******/ 	
+/******/
 /******/ })()
 ;
 //# sourceMappingURL=index.js.map
