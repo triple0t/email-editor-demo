@@ -2,7 +2,7 @@
 
 namespace EmailEditorDemo\Patterns;
 
-use MailPoet\EmailEditor\Engine\Patterns\Abstract_Pattern;
+use Automattic\WooCommerce\EmailEditor\Engine\Patterns\Abstract_Pattern;
 
 /**
  * Pattern with blockTypes: core/post-content.

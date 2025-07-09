@@ -6,17 +6,27 @@
 	"license": "GPL-2.0-or-later",
 	"main": "build/index.js",
 	"scripts": {
-		"preinstall": "npm run patch-files && cd packages/js/email-editor && npm install --dev && cd ../../php/email-editor && composer install",
 		"postinstall": "npm run build",
-		"build": "cd packages/js/email-editor && npm run build && cp -Rf build ../../..",
-		"dev": "cd packages/js/email-editor && npm run start",
-		"dev:dump-autoload": "cd packages/php/email-editor && composer dump-autoload",
-		"patch-files": "npm run patch:composer-json && npm run patch:email-editor-js-files && npm run patch:create-container-file",
-		"patch:composer-json": "php -d memory_limit=-1 tasks/patch-composer-json.php",
-		"patch:email-editor-js-files": "php -d memory_limit=-1 tasks/patch-email-editor-js-package.php",
-		"patch:create-container-file": "php -d memory_limit=-1 tasks/patch-container.php"
+		"start": "wp-scripts start",
+        "build": "wp-scripts build",
+		"dev:dump-autoload": "composer dump-autoload -o",
+		"plugin-zip": "wp-scripts plugin-zip"
 	},
 	"devDependencies": {
 		"@wordpress/scripts": "^30.5.1"
-	}
+	},
+	"dependencies": {
+		"@woocommerce/email-editor": "^0.1.0"
+	},
+	"files": [
+		"vendor",
+		"build",
+		"core",
+		"email-editor-demo.php",
+		"composer.json",
+		"composer.lock",
+		"package.json",
+		"package-lock.json",
+		"README.md"
+	]
 }

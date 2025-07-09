@@ -1,7 +1,10 @@
 const generateWordpressPlaygroundBlueprint = ( branchName ) => {
 	const defaultSchema = {
 		landingPage: '/wp-admin/edit.php?post_type=editor_demo_mail',
-
+		preferredVersions: {
+			php: '8.1',
+			wp: '8.1',
+		},
 		steps: [
 			{
 				step: 'login',

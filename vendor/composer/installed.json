@@ -1,0 +1,346 @@
+{
+    "packages": [
+        {
+            "name": "pelago/emogrifier",
+            "version": "v7.3.0",
+            "version_normalized": "7.3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MyIntervals/emogrifier.git",
+                "reference": "6e00d9d8235e8cc8eec857e8dcd6cfeefdfd0cd6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MyIntervals/emogrifier/zipball/6e00d9d8235e8cc8eec857e8dcd6cfeefdfd0cd6",
+                "reference": "6e00d9d8235e8cc8eec857e8dcd6cfeefdfd0cd6",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-libxml": "*",
+                "php": "~7.3.0 || ~7.4.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
+                "sabberworm/php-css-parser": "^8.7.0",
+                "symfony/css-selector": "^4.4.23 || ^5.4.0 || ^6.0.0 || ^7.0.0"
+            },
+            "require-dev": {
+                "php-parallel-lint/php-parallel-lint": "1.4.0",
+                "phpstan/extension-installer": "1.4.3",
+                "phpstan/phpstan": "1.12.7",
+                "phpstan/phpstan-phpunit": "1.4.0",
+                "phpstan/phpstan-strict-rules": "1.6.1",
+                "phpunit/phpunit": "9.6.21",
+                "rawr/cross-data-providers": "2.4.0"
+            },
+            "time": "2024-10-28T16:12:26+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "8.0.x-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Pelago\\Emogrifier\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oliver Klee",
+                    "email": "github@oliverklee.de"
+                },
+                {
+                    "name": "Zoli Szabó",
+                    "email": "zoli.szabo+github@gmail.com"
+                },
+                {
+                    "name": "John Reeve",
+                    "email": "jreeve@pelagodesign.com"
+                },
+                {
+                    "name": "Jake Hotson",
+                    "email": "jake.github@qzdesign.co.uk"
+                },
+                {
+                    "name": "Cameron Brooks"
+                },
+                {
+                    "name": "Jaime Prado"
+                }
+            ],
+            "description": "Converts CSS styles into inline style attributes in your HTML code",
+            "homepage": "https://www.myintervals.com/emogrifier.php",
+            "keywords": [
+                "css",
+                "email",
+                "pre-processing"
+            ],
+            "support": {
+                "issues": "https://github.com/MyIntervals/emogrifier/issues",
+                "source": "https://github.com/MyIntervals/emogrifier"
+            },
+            "install-path": "../pelago/emogrifier"
+        },
+        {
+            "name": "sabberworm/php-css-parser",
+            "version": "v8.8.0",
+            "version_normalized": "8.8.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MyIntervals/PHP-CSS-Parser.git",
+                "reference": "3de493bdddfd1f051249af725c7e0d2c38fed740"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MyIntervals/PHP-CSS-Parser/zipball/3de493bdddfd1f051249af725c7e0d2c38fed740",
+                "reference": "3de493bdddfd1f051249af725c7e0d2c38fed740",
+                "shasum": ""
+            },
+            "require": {
+                "ext-iconv": "*",
+                "php": "^5.6.20 || ^7.0.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "5.7.27 || 6.5.14 || 7.5.20 || 8.5.41"
+            },
+            "suggest": {
+                "ext-mbstring": "for parsing UTF-8 CSS"
+            },
+            "time": "2025-03-23T17:59:05+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "9.0.x-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Sabberworm\\CSS\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Raphael Schweikert"
+                },
+                {
+                    "name": "Oliver Klee",
+                    "email": "github@oliverklee.de"
+                },
+                {
+                    "name": "Jake Hotson",
+                    "email": "jake.github@qzdesign.co.uk"
+                }
+            ],
+            "description": "Parser for CSS Files written in PHP",
+            "homepage": "https://www.sabberworm.com/blog/2010/6/10/php-css-parser",
+            "keywords": [
+                "css",
+                "parser",
+                "stylesheet"
+            ],
+            "support": {
+                "issues": "https://github.com/MyIntervals/PHP-CSS-Parser/issues",
+                "source": "https://github.com/MyIntervals/PHP-CSS-Parser/tree/v8.8.0"
+            },
+            "install-path": "../sabberworm/php-css-parser"
+        },
+        {
+            "name": "soundasleep/html2text",
+            "version": "2.1.0",
+            "version_normalized": "2.1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/soundasleep/html2text.git",
+                "reference": "83502b6f8f1aaef8e2e238897199d64f284b4af3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/soundasleep/html2text/zipball/83502b6f8f1aaef8e2e238897199d64f284b4af3",
+                "reference": "83502b6f8f1aaef8e2e238897199d64f284b4af3",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-libxml": "*",
+                "php": "^7.3|^8.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.9",
+                "phpunit/phpunit": "^7.0|^8.0|^9.0"
+            },
+            "time": "2023-01-06T09:28:15+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Soundasleep\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jevon Wright",
+                    "homepage": "https://jevon.org",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A PHP script to convert HTML into a plain text format",
+            "homepage": "https://github.com/soundasleep/html2text",
+            "keywords": [
+                "email",
+                "html",
+                "php",
+                "text"
+            ],
+            "support": {
+                "email": "support@jevon.org",
+                "issues": "https://github.com/soundasleep/html2text/issues",
+                "source": "https://github.com/soundasleep/html2text/tree/2.1.0"
+            },
+            "install-path": "../soundasleep/html2text"
+        },
+        {
+            "name": "symfony/css-selector",
+            "version": "v6.4.13",
+            "version_normalized": "6.4.13.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/css-selector.git",
+                "reference": "cb23e97813c5837a041b73a6d63a9ddff0778f5e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/css-selector/zipball/cb23e97813c5837a041b73a6d63a9ddff0778f5e",
+                "reference": "cb23e97813c5837a041b73a6d63a9ddff0778f5e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "time": "2024-09-25T14:18:03+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\CssSelector\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Jean-François Simon",
+                    "email": "jeanfrancois.simon@sensiolabs.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Converts CSS selectors to XPath expressions",
+            "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/css-selector/tree/v6.4.13"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "install-path": "../symfony/css-selector"
+        },
+        {
+            "name": "woocommerce/email-editor",
+            "version": "1.0.0",
+            "version_normalized": "1.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/woocommerce/email-editor.git",
+                "reference": "67eb82fb45694add6ff07c6434ecfbdd8d80f054"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/woocommerce/email-editor/zipball/67eb82fb45694add6ff07c6434ecfbdd8d80f054",
+                "reference": "67eb82fb45694add6ff07c6434ecfbdd8d80f054",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4",
+                "soundasleep/html2text": "^2.1"
+            },
+            "require-dev": {
+                "automattic/jetpack-changelogger": "3.3.0",
+                "pelago/emogrifier": "^7.3",
+                "phpunit/phpunit": "^9.6",
+                "woocommerce/woocommerce-sniffs": "1.0.0",
+                "yoast/phpunit-polyfills": "^4.0"
+            },
+            "time": "2025-06-27T09:53:10+00:00",
+            "type": "wordpress-plugin",
+            "extra": {
+                "changelogger": {
+                    "types": {
+                        "add": "Adds functionality",
+                        "dev": "Development related task",
+                        "fix": "Fixes an existing bug",
+                        "tweak": "A minor adjustment to the codebase",
+                        "update": "Update existing functionality",
+                        "enhancement": "Improve existing functionality",
+                        "performance": "Address performance issues"
+                    },
+                    "changelog": "changelog.md",
+                    "formatter": {
+                        "filename": "../../../tools/changelogger/class-php-package-formatter.php"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "description": "Email editor based on WordPress Gutenberg package.",
+            "support": {
+                "source": "https://github.com/woocommerce/email-editor/tree/1.0.0"
+            },
+            "install-path": "../woocommerce/email-editor"
+        }
+    ],
+    "dev": false,
+    "dev-package-names": []
+}

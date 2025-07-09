@@ -1,0 +1,11 @@
+{
+	"autoload": {
+		"classmap": [
+			"core/"
+		]
+	},
+    "require": {
+        "woocommerce/email-editor": "^1.0",
+		"pelago/emogrifier": "^7.3"
+    }
+}

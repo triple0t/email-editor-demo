@@ -2,8 +2,8 @@
 
 namespace EmailEditorDemo\Templates;
 
-use MailPoet\EmailEditor\Engine\Templates\Template;
-use MailPoet\EmailEditor\Engine\Templates\Templates_Registry;
+use Automattic\WooCommerce\EmailEditor\Engine\Templates\Template;
+use Automattic\WooCommerce\EmailEditor\Engine\Templates\Templates_Registry;
 use EmailEditorDemo\EmailEditorDemoIntegration;
 
 class TemplatesController {
@@ -20,7 +20,7 @@ class TemplatesController {
 
 
   public function initialize() {
-   add_filter('mailpoet_email_editor_register_templates', [$this, 'registerTemplates']);
+   add_filter('woocommerce_email_editor_register_templates', [$this, 'registerTemplates']);
   }
 
   public function registerTemplates(Templates_Registry $templatesRegistry) {
@@ -35,7 +35,7 @@ class TemplatesController {
 		$template->getTitle(),
 		$template->getDescription(),
 		$template->getContent(),
-		[EmailEditorDemoIntegration::MAILPOET_EMAIL_POST_TYPE]
+		[EmailEditorDemoIntegration::EMAIL_POST_TYPE]
 	  );
 	  $templatesRegistry->register($theTemplate);
     }
